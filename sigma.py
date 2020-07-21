@@ -52,15 +52,15 @@ Menon, A., Mehrotra, K., Mohan, C., and Ranka, S., Neural Networks,
 Volume 9, Number 5, pp. 819-835 (1996)
 """
 
-
-from math import exp
-from numpy import isclose
-
-
 __all__ = ['sigma', 'dsigma_dz', 'd2sigma_dz2', 'd3sigma_dz3', 'd4sigma_dz4',
             's', 's1', 's2', 's3', 's4']
 __version__ = '0.0'
 __author__ = 'Eric Winter (ewinter@stsci.edu)'
+
+
+from math import exp
+from numpy import isclose
+
 
 
 # Standard versions

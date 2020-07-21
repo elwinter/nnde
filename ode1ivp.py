@@ -55,6 +55,11 @@ Todo:
 """
 
 
+__all__ = []
+__version__ = '0.0'
+__author__ = 'Eric Winter (ewinter@stsci.edu)'
+
+
 from importlib import import_module
 
 from ode1 import ODE1
