@@ -11,18 +11,33 @@ Example:
 
 Attributes:
     None
+
+To do:
+    * Adjust docstrings to PEP 257 conventions.
+    * Add function annotations.
+    * Add variable annotations.
 """
 
 
+__all__ = ['kdelta']
+__version__ = '0.0'
+__author__ = 'Eric Winter (ewinter@stsci.edu)'
+
+
 def kdelta(i, j):
-    """Return 1 if i == j, else 0."""
+    """
+    The Konecker delta function.
+
+    Given 2 integers i and j, return 1 if i == j, else 0.
+    """
+
     return 1 if i == j else 0
 
 
 if __name__ == '__main__':
     for i in range(-2, 3):
         for j in range(-2, 3):
-            print("Testing kdelta[%d,%d]." % (i, j))
+            print("Testing kdelta[%d, %d]." % (i, j))
             kd = kdelta(i, j)
             if i == j:
                 assert kd == 1
