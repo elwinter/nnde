@@ -954,8 +954,6 @@ class NNODE1IVP(SLFFNN):
         self.nit += 1
         print('xk =', xk)
 
-# -----------------------------------------------------------------------------
-
 
 if __name__ == '__main__':
 
@@ -968,7 +966,7 @@ if __name__ == '__main__':
     training_opts = {}
     training_opts['debug'] = True
     training_opts['verbose'] = True
-    training_opts['maxepochs'] = 100000
+    training_opts['maxepochs'] = 1000
 
     # Test each training algorithm on each equation.
     for eq in ('eq.lagaris_01',):
@@ -992,8 +990,7 @@ if __name__ == '__main__':
         print()
 
         # Create and train the networks.
-        # for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS', 'Newton-CG'):
-        for trainalg in ('delta',):
+        for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS', 'Newton-CG'):
             print('Training using %s algorithm.' % trainalg)
             net = NNODE1IVP(ode1ivp)
             print(net)
