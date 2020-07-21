@@ -1,4 +1,3 @@
 {
-    "python.linting.enabled": true,
-    "python.pythonPath": "/Users/ewinter/miniconda3/envs/research/bin/python"
+    "python.linting.enabled": true
 }
