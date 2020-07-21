@@ -4,6 +4,9 @@ SLFFNN - Base class for single-layer feed-forward neural networks
 This module provides the base functionality for all single-layer feed-forward
 neural network objects used in the nnode software.
 
+This class is currently an abstract base class. It must be subclassed    
+to be useful.
+
 Example:
     Create an empty SLFFNN object.
         net = SLFNN()
@@ -12,19 +15,22 @@ Attributes:
     None
 
 Methods:
-    None
+    __init__() - Constructor
 
 Todo:
-    None
+    * Add function annotations.
+    * Add variable annotations.
 """
 
+
 from neuralnetwork import NeuralNetwork
+
 
 class SLFFNN(NeuralNetwork):
     """Base class for all single-layer feed-forward neural network objects"""
 
     def __init__(self):
-        """Initialize the neural network object."""
+        """Constructor for SLFNN objects"""
         super().__init__()
 
 
