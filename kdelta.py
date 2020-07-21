@@ -10,7 +10,6 @@ Example:
         kd = kdelta.kdelta(i, j)
 
 To do:
-    * Adjust docstrings to PEP 257 conventions.
     * Add function annotations.
     * Add variable annotations.
 """
