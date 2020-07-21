@@ -1,5 +1,7 @@
 # nnde
-nnde is a package of Python modules which implement a set of neural networks which solve ordinary and partial differential equations. This code is based on the previous package, nnode.
+nnde is a package of Python modules which implement a set of neural networks
+which solve ordinary and partial differential equations. This code is based
+on the previous package, nnode.
 
 The technique is based on Lagaris et al (1998).
 
