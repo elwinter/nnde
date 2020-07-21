@@ -1,15 +1,20 @@
 """
-DiffEq - Base class for differential equations
+DifferentialEquation - Base class for differential equations
 
 This module provides the base functionality for all differential equation
-objects used in the nnode software.
+objects used in the nnde software.
+
+This class is currently an abstract ancestor class. It must be subclassed
+to be useful.
 
 Example:
-    Create an empty DiffEq object.
-        diffeq = DiffEq()
+    Create an empty DifferentialEquation object.
+        diffeq = DifferentialEquation()
 
 Attributes:
-    G - Function for differential equation, in the form G() = 0
+    G - Function for differential equation, in the form G() = 0,
+    where G() is a function of the independent variables x, the solution
+    Y(x), and the Jacobian, Hessian, and higher derivatives of Y(x).
 
 Methods:
     None
@@ -19,16 +24,25 @@ Todo:
 """
 
 
-class DiffEq:
-    """Base class for all differential equation objects"""
+__all__ = []
+__version__ = '0.0'
+__author__ = 'Eric Winter (ewinter@stsci.edu)'
+
+
+class DifferentialEquation:
+    """Abstract base class for all differential equation objects"""
 
     def __init__(self):
+        """Constructor for DifferentialEquation objects - must be
+        overridden in subclass."""
         pass
 
     def G(self):
+        """Differential equation  to be solved, in the form G() = 0 -
+        must be overridden in subclass."""
         return None
 
 
 if __name__ == '__main__':
-    diffeq = DiffEq()
+    diffeq = DifferentialEquation()
     print(diffeq)
