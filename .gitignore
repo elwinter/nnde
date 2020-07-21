@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# OS X-specific items
+.DS_Store
+
+# Emacs backup files
+*~
