@@ -7,10 +7,7 @@ kdelta(i, j) = 1 if i == j, else 0
 
 Example:
     Calculate the Kronecker delta for 2 integers.
-        kd = kdelta(i, j)
-
-Attributes:
-    None
+        kd = kdelta.kdelta(i, j)
 
 To do:
     * Adjust docstrings to PEP 257 conventions.
