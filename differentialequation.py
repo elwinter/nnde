@@ -17,10 +17,12 @@ Attributes:
     Y(x), and the Jacobian, Hessian, and higher derivatives of Y(x).
 
 Methods:
-    None
+    __init__() - Constructor
+    G() - (abstract) Evaluate the differential equation.
 
 Todo:
-    None
+    * Add function annotations.
+    * Add variable annotations.
 """
 
 

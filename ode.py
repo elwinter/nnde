@@ -2,30 +2,32 @@
 ODE - Base class for ordinary differential equations
 
 This module provides the base functionality for all ordinary differential
-equation objects used in the nnode software.
+equation objects used in the nnde software.
+
+This class is currently an abstract ancestor class. It must be subclassed    
+to be useful.
 
 Example:
     Create an empty ODE object.
         ode = ODE()
 
-Attributes:
-    None
-
 Methods:
-    None
+    __init__() - Constructor
 
 Todo:
-    None
+    * Add function annotations.
+    * Add variable annotations.
 """
 
 
-from diffeq import DiffEq
+from differentialequation import DifferentialEquation
 
 
-class ODE(DiffEq):
-    """Base class for all ordinary differential equation objects"""
+class ODE(DifferentialEquation):
+    """Abstract base class for all ordinary differential equation objects"""
 
     def __init__(self):
+        """Constructor for ODE objects - must be  overridden in subclass."""
         super().__init__()
 
 
