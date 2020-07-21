@@ -1,9 +1,18 @@
 """
-NNODE1IVP - Class to solve 1st-order ordinary differential equation initial
-value problems using a neural network
+NNODE1IVP - Class to solve 1st-order ordinary differential equation
+initial value problems using a neural network
 
-This module provides the functionality to solve 1st-order ordinary differential
-equation initial value problems using a neural network.
+This module provides the functionality to solve 1st-order ordinary
+differential equation initial value problems using a neural network.
+
+This class creates a single-layer feedforward network with a number
+of hidden nodes H (default is 10). These nodes are represented by
+attributes w, u, and v, which represent the hidden node weights and
+biases, and the output node weights for the hidden nodes.
+
+The hidden nodes use the sigmoid transfer function.
+
+Note that this class makes heavy use of NumPy arrays.
 
 Example:
     Create an empty NNODE1IVP object.
@@ -17,14 +26,24 @@ Attributes:
     None
 
 Methods:
-    train
-    run
-    run_derivative
+    __init__() - Constructor
+    __str__() - Create string version
+    train() - Train the network
+    run() - Run the trained network
+    run_debug() - Run the trained network (debug version)
+    run_derivative() - Run the trained derivative network
+    run_derivative_debug() - Run the trained derivative network (debug)
 
 Todo:
-    * Expand base functionality.
+    * Add function annotations.
+    * Add variable annotations.
     * Combine error and gradient code into a single function for speed.
 """
+
+
+__all__ = []
+__version__ = '0.0'
+__author__ = 'Eric Winter (ewinter@stsci.edu)'
 
 
 from math import sqrt
@@ -78,6 +97,10 @@ class NNODE1IVP(SLFFNN):
     # Public methods
 
     def __init__(self, eq, nhid=DEFAULT_NHID):
+        """Constructor for NNODE1IVP objects.
+        eq is an ODE1IVP object describing the equation to solve.
+        nhid is the number of hidden nodes to use in the network
+        (default is DEFAULT_NHID)."""
         super().__init__()
 
         # Save the differential equation object.
@@ -98,10 +121,11 @@ class NNODE1IVP(SLFFNN):
         self.G_v = np.vectorize(self.eq.G)
         self.dG_dY_v = np.vectorize(self.eq.dG_dY)
         self.dG_ddYdx_v = np.vectorize(self.eq.dG_ddYdx)
-        self.Yt_v = np.vectorize(self.__Yt)
-        self.dYt_dx_v = np.vectorize(self.__dYt_dx)
+        self.Yt_v = np.vectorize(self._Yt)
+        self.dYt_dx_v = np.vectorize(self._dYt_dx)
 
     def __str__(self):
+        """Create the string version of the object"""
         s = ''
         s += "%s\n" % self.eq.name
         s += "w = %s\n" % self.w
@@ -110,20 +134,23 @@ class NNODE1IVP(SLFFNN):
         return s.rstrip()
 
     def train(self, x, trainalg=DEFAULT_TRAINALG, opts=DEFAULT_OPTS):
-        """Train the network to solve a 1st-order ODE IVP. """
+        """Train the network to solve a 1st-order ODE IVP.
+        trainalg is the desired training algorithm.
+        opts is a dictionary of training options."""
         my_opts = dict(DEFAULT_OPTS)
         my_opts.update(opts)
 
         if trainalg == 'delta':
-            self.__train_delta(x, my_opts)
+            self._train_delta(x, my_opts)
         elif trainalg in ('Nelder-Mead', 'Powell', 'CG', 'BFGS', 'Newton-CG'):
-            self.__train_minimize(x, trainalg, my_opts)
+            self._train_minimize(x, trainalg, my_opts)
         else:
             print('ERROR: Invalid training algorithm (%s)!' % trainalg)
             exit(1)
 
     def run(self, x):
-        """Compute the trained solution."""
+        """Compute the trained solution for each value in the
+        array x."""
         w = self.w
         u = self.u
         v = self.v
@@ -136,7 +163,8 @@ class NNODE1IVP(SLFFNN):
         return Yt
 
     def run_debug(self, x):
-        """Compute the trained solution (debug version)."""
+        """Compute the trained solution for each value in the
+        array x (debug version)."""
         n = len(x)
         H = len(self.v)
         w = self.w
@@ -160,12 +188,13 @@ class NNODE1IVP(SLFFNN):
 
         Yt = np.zeros(n)
         for i in range(n):
-            Yt[i] = self.__Yt(x[i], N[i])
+            Yt[i] = self._Yt(x[i], N[i])
 
         return Yt
 
     def run_derivative(self, x):
-        """Compute the trained derivative."""
+        """Compute the trained 1st derivative of the solution
+        for each value in the array x."""
         w = self.w
         u = self.u
         v = self.v
@@ -180,7 +209,8 @@ class NNODE1IVP(SLFFNN):
         return dYt_dx
 
     def run_derivative_debug(self, x):
-        """Compute the trained derivative (debug version)."""
+        """Compute the trained 1st derivative of the solution
+        for each value in the array x (debug version)."""
         n = len(x)
         H = len(self.v)
         w = self.w
@@ -214,21 +244,21 @@ class NNODE1IVP(SLFFNN):
 
         dYt_dx = np.zeros(n)
         for i in range(n):
-            dYt_dx[i] = self.__dYt_dx(x[i], N[i], dN_dx[i])
+            dYt_dx[i] = self._dYt_dx(x[i], N[i], dN_dx[i])
 
         return dYt_dx
 
     # Internal methods below this point
 
-    def __Yt(self, x, N):
+    def _Yt(self, x, N):
         """Trial function"""
         return self.eq.ic + x*N
 
-    def __dYt_dx(self, x, N, dN_dx):
+    def _dYt_dx(self, x, N, dN_dx):
         """First derivative of trial function"""
         return x*dN_dx + N
 
-    def __train_delta(self, x, opts=DEFAULT_OPTS):
+    def _train_delta(self, x, opts=DEFAULT_OPTS):
         """Train the network using the delta method. """
 
         my_opts = dict(DEFAULT_OPTS)
@@ -345,7 +375,7 @@ class NNODE1IVP(SLFFNN):
         self.u = u
         self.v = v
 
-    def __train_delta_debug(self, x, opts=DEFAULT_OPTS):
+    def _train_delta_debug(self, x, opts=DEFAULT_OPTS):
         """Train using the delta method (debug version). """
 
         my_opts = dict(DEFAULT_OPTS)
@@ -467,11 +497,11 @@ class NNODE1IVP(SLFFNN):
             # for each training point.
             Yt = np.zeros(n)
             for i in range(n):
-                Yt[i] = self.__Yt(x[i], N[i])
+                Yt[i] = self._Yt(x[i], N[i])
 
             dYt_dx = np.zeros(n)
             for i in range(n):
-                dYt_dx[i] = self.__dYt_dx(x[i], N[i], dN_dx[i])
+                dYt_dx[i] = self._dYt_dx(x[i], N[i], dN_dx[i])
 
             dYt_dw = np.zeros((n, H))
             for i in range(n):
@@ -567,7 +597,7 @@ class NNODE1IVP(SLFFNN):
         self.u = u
         self.v = v
 
-    def __train_minimize(self, x, trainalg, opts=DEFAULT_OPTS):
+    def _train_minimize(self, x, trainalg, opts=DEFAULT_OPTS):
         """Train the network using the SciPy minimize() function. """
 
         my_opts = dict(DEFAULT_OPTS)
@@ -600,14 +630,14 @@ class NNODE1IVP(SLFFNN):
         # Add the status callback if requested.
         callback = None
         if my_opts['verbose']:
-            callback = self.__print_progress
+            callback = self._print_progress
 
         # Minimize the error function to get the new parameter values.
         if trainalg in ('Nelder-Mead', 'Powell', 'CG', 'BFGS'):
             jac = None
         elif trainalg in ('Newton-CG',):
-            jac = self.__compute_error_gradient
-        res = minimize(self.__compute_error, p, method=trainalg, jac=jac,
+            jac = self._compute_error_gradient
+        res = minimize(self._compute_error, p, method=trainalg, jac=jac,
                        args=(x), callback=callback)
         self.res = res
 
@@ -616,7 +646,7 @@ class NNODE1IVP(SLFFNN):
         self.u = res.x[H:2*H]
         self.v = res.x[2*H:3*H]
 
-    def __compute_error(self, p, x):
+    def _compute_error(self, p, x):
         """Compute the error function using the current parameter values."""
 
         # Unpack the network parameters (hsplit() returns views, so no copies made).
@@ -635,7 +665,7 @@ class NNODE1IVP(SLFFNN):
 
         return E
 
-    def __compute_error_debug(self, p, x):
+    def _compute_error_debug(self, p, x):
         """Compute the error function using the current parameter values (debug version)."""
 
         # Fetch the number of training points.
@@ -668,10 +698,10 @@ class NNODE1IVP(SLFFNN):
                 dN_dx[i] += s1[i, k]*v[k]*w[k]
         Yt = np.zeros(n)
         for i in range(n):
-            Yt[i] = self.__Yt(x[i], N[i])
+            Yt[i] = self._Yt(x[i], N[i])
         dYt_dx = np.zeros(n)
         for i in range(n):
-            dYt_dx[i] = self.__dYt_dx(x[i], N[i], dN_dx[i])
+            dYt_dx[i] = self._dYt_dx(x[i], N[i], dN_dx[i])
         G = np.zeros(n)
         for i in range(n):
             G[i] = self.eq.G(x[i], Yt[i], dYt_dx[i])
@@ -681,7 +711,7 @@ class NNODE1IVP(SLFFNN):
 
         return E
 
-    def __compute_error_gradient(self, p, x):
+    def _compute_error_gradient(self, p, x):
         """Compute the gradient of the error function wrt network
         parameters."""
 
@@ -732,8 +762,8 @@ class NNODE1IVP(SLFFNN):
 
         d2N_dudx = v*s2*w
         d2N_dvdx = s1*w
-        Yt = self.__Yt(x, N)
-        dYt_dx = self.__dYt_dx(x, N, dN_dx)
+        Yt = self._Yt(x, N)
+        dYt_dx = self._dYt_dx(x, N, dN_dx)
         dYt_dw = np.broadcast_to(x, (H, n)).T*dN_dw
         dYt_du = np.broadcast_to(x, (H, n)).T*dN_du
         dYt_dv = np.broadcast_to(x, (H, n)).T*dN_dv
@@ -756,7 +786,7 @@ class NNODE1IVP(SLFFNN):
 
         return jac
 
-    def __compute_error_gradient_debug(self, p, x):
+    def _compute_error_gradient_debug(self, p, x):
         """Compute the gradient of the error function wrt network
         parameters (debug version)."""
 
@@ -830,11 +860,11 @@ class NNODE1IVP(SLFFNN):
 
         Yt = np.zeros(n)
         for i in range(n):
-            Yt[i] = self.__Yt(x[i], N[i])
+            Yt[i] = self._Yt(x[i], N[i])
 
         dYt_dx = np.zeros(n)
         for i in range(n):
-            dYt_dx[i] = self.__dYt_dx(x[i], N[i], dN_dx[i])
+            dYt_dx[i] = self._dYt_dx(x[i], N[i], dN_dx[i])
 
         dYt_dw = np.zeros((n, H))
         for i in range(n):
@@ -918,7 +948,7 @@ class NNODE1IVP(SLFFNN):
 
         return jac
 
-    def __print_progress(self, xk):
+    def _print_progress(self, xk):
         """Callback to print progress message from optimizer"""
         print('nit =', self.nit)
         self.nit += 1
@@ -931,17 +961,17 @@ if __name__ == '__main__':
 
     # Create training data.
     nx = 10
-    x_train = np.array(create_training_grid([nx]))
+    x_train = np.array(create_training_grid(nx))
     print('The training points are:\n', x_train)
 
     # Options for training
     training_opts = {}
     training_opts['debug'] = True
     training_opts['verbose'] = True
-    training_opts['maxepochs'] = 1000
+    training_opts['maxepochs'] = 100000
 
     # Test each training algorithm on each equation.
-    for eq in ('lagaris_01',):
+    for eq in ('eq.lagaris_01',):
         print('Examining %s.' % eq)
         ode1ivp = ODE1IVP(eq)
         print(ode1ivp)
@@ -962,7 +992,8 @@ if __name__ == '__main__':
         print()
 
         # Create and train the networks.
-        for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS', 'Newton-CG'):
+        # for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS', 'Newton-CG'):
+        for trainalg in ('delta',):
             print('Training using %s algorithm.' % trainalg)
             net = NNODE1IVP(ode1ivp)
             print(net)
