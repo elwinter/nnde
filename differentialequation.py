@@ -4,7 +4,7 @@ DifferentialEquation - Base class for differential equations
 This module provides the base functionality for all differential equation
 objects used in the nnde software.
 
-This class is currently an abstract ancestor class. It must be subclassed
+This class is currently an abstract base class. It must be subclassed
 to be useful.
 
 Example:
@@ -12,13 +12,13 @@ Example:
         diffeq = DifferentialEquation()
 
 Attributes:
-    G - Function for differential equation, in the form G() = 0,
-    where G() is a function of the independent variables x, the solution
-    Y(x), and the Jacobian, Hessian, and higher derivatives of Y(x).
+    None
 
 Methods:
     __init__() - Constructor
-    G() - (abstract) Evaluate the differential equation.
+    G - Function for differential equation, in the form G() = 0,
+    where G() is a function of the independent variables x, the solution
+    Y(x), and the Jacobian, Hessian, and higher derivatives of Y(x).
 
 Todo:
     * Add function annotations.
