@@ -969,7 +969,7 @@ if __name__ == '__main__':
     training_opts['maxepochs'] = 1000
 
     # Test each training algorithm on each equation.
-    for eq in ('eq.lagaris_01',):
+    for eq in ('eq.lagaris_01', 'eq.lagaris_02',):
         print('Examining %s.' % eq)
         ode1ivp = ODE1IVP(eq)
         print(ode1ivp)
