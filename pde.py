@@ -4,7 +4,7 @@ PDE - Base class for partial differential equations
 This module provides the base functionality for all partial differential
 equation objects used in the nnode software.
 
-This class is currently an abstract base class. It must be subclassed    
+This class is currently an abstract base class. It must be subclassed
 to be useful.
 
 Example:
