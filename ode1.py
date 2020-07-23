@@ -4,7 +4,7 @@ ODE1 - Base class for 1st-order ordinary differential equations
 This module provides the base functionality for all 1st-order ordinary
 differential equation objects used in the nnode software.
 
-This class is currently an abstract base class. It must be subclassed    
+This class is currently an abstract base class. It must be subclassed
 to be useful.
 
 Example:
@@ -15,10 +15,14 @@ Attributes:
     None
 
 Methods:
-    None
+    __init__() - Constructor
+    G - Function for differential equation, in the form G() = 0,
+    where G() is a function of the independent variables x, the solution
+    Y(x), and the Jacobian, Hessian, and higher derivatives of Y(x).
 
 Todo:
-    None
+    * Add function annotations.
+    * Add variable annotations.
 """
 
 

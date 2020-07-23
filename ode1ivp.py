@@ -73,7 +73,8 @@ class ODE1IVP(ODE1):
         """Constructor for ODE1IVP objects
 
         Parameters:
-        diffeqmod - The name of the Python module containing the problem definition.
+        diffeqmod - The name of the Python module containing the problem
+        definition.
         """
         super().__init__()
 

@@ -4,7 +4,7 @@ ODE - Base class for ordinary differential equations
 This module provides the base functionality for all ordinary differential
 equation objects used in the nnde software.
 
-This class is currently an abstract base class. It must be subclassed    
+This class is currently an abstract base class. It must be subclassed
 to be useful.
 
 Example:
