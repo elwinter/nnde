@@ -951,8 +951,12 @@ if __name__ == '__main__':
 
     # Create training data.
     nx = 10
-    x_train = np.array(create_training_grid([nx, nx]))
-    print('The training points are:\n', x_train)
+    nt = 10
+    xt_train = np.array(create_training_grid([nx, nt]))
+    print('The training points are:\n', xt_train)
+    N = nx*nt
+    assert len(xt_train) == N
+    print('A total of %d training points were created.' % N)
 
     # Options for training
     training_opts = {}
@@ -966,28 +970,24 @@ if __name__ == '__main__':
         pde1ivp = PDE1IVP(eq)
         print(pde1ivp)
 
-RESUME HERE
+        # Determine the number of dimensions in the problem.
+        m = len(pde1ivp.bc)
+        print('Differential equation %s has %d dimensions.' % (eq, m))
 
-    #     # Determine the number of dimensions in the problem.
-    #     m = len(pde1ivp.bc)
-    #     print('Differential equation %s has %d dimensions.' % (eq, m))
-
-    #     # Construct the grid of regularly-spaced training data.
-
-    #     # (Optional) analytical solution and derivative
-    #     if ode1ivp.Ya:
-    #         Ya = np.zeros(nx)
-    #         for i in range(nx):
-    #             Ya[i] = ode1ivp.Ya(x_train[i])
-    #         print('The analytical solution at the training points is:')
-    #         print(Ya)
-    #     if ode1ivp.dYa_dx:
-    #         dYa_dx = np.zeros(nx)
-    #         for i in range(nx):
-    #             dYa_dx[i] = ode1ivp.dYa_dx(x_train[i])
-    #         print('The analytical derivative at the training points is:')
-    #         print(dYa_dx)
-    #     print()
+        # (Optional) analytical solution and derivative
+        if pde1ivp.Ya:
+            Ya = np.zeros(N)
+            for i in range(N):
+                Ya[i] = pde1ivp.Ya(xt_train[i])
+            print('The analytical solution at the training points is:')
+            print(Ya)
+        if pde1ivp.delYa:
+            delYa = np.zeros((N, m))
+            for i in range(N):
+                for j in range(m):
+                    delYa[i, j] = pde1ivp.delYa[j](xt_train[i])
+            print('The analytical gradient at the training points is:')
+            print(delYa)
 
     #     # Create and train the networks.
     #     for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS',
