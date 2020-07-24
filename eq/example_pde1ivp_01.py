@@ -40,52 +40,66 @@ def G(xy, Y, delY):
     (dY_dx, dY_dy) = delY
     return dY_dy + 2*dY_dx
 
+
 def f0(xy):
     """Initial condition at x=0"""
     (x, y) = xy
     return sin(y)
 
+
 f1 = None
+
 
 def g0(xy):
     """Initial condition at y=0"""
     (x, y) = xy
     return sin(-x/2)
 
+
 g1 = None
 
+
 bc = [[f0, f1], [g0, g1]]
+
 
 def dG_dY(xy, Y, delY):
     """Derivative of G wrt Y"""
     return 0
 
+
 def dG_ddYdx(xy, Y, delY):
     """Derivative of G wrt dY/dx"""
     return 2
+
 
 def dG_ddYdy(xy, Y, delY):
     """Derivative of G wrt dY/dy"""
     return 1
 
+
 dG_ddelY = [dG_ddYdx, dG_ddYdy]
+
 
 def Ya(xy):
     """Analytical solution"""
     (x, y) = xy
     return -sin((x - 2*y)/2)
 
+
 def dYa_dx(xy):
     """Derivative of analytical solution wrt x"""
     (x, y) = xy
     return -cos((x - 2*y)/2)/2
+
 
 def dYa_dy(xy):
     """Derivative of analytical solution wrt y"""
     (x, y) = xy
     return cos((x - 2*y)/2)
 
+
 delYa = [dYa_dx, dYa_dy]
+
 
 if __name__ == '__main__':
 
@@ -105,10 +119,11 @@ if __name__ == '__main__':
 
     assert np.isclose(G(x_test, Y_test, delY_test), G_ref)
     for j in range(m):
-        assert np.isclose(bc[j](x_test)), bc_ref[j][0]
+        assert np.isclose(bc[j][0](x_test), bc_ref[j][0])
     assert np.isclose(dG_dY(x_test, Y_test, delY_test), dG_dY_ref)
     for j in range(m):
-        assert np.isclose(dG_ddelY[j](x_test, Y_test, delY_test), dG_ddelY_ref[j])
+        assert np.isclose(dG_ddelY[j](x_test, Y_test, delY_test),
+                          dG_ddelY_ref[j])
     assert np.isclose(Ya(x_test), Ya_ref)
     for j in range(m):
         assert np.isclose(delYa[j](x_test), delYa_ref[j])
