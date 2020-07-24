@@ -52,21 +52,26 @@ def G(x, Y, dY_dx):
         - x**3 - 2*x - x**2*(1 + 3*x**2)/(1 + x + x**3)
     )
 
+
 def dG_dY(x, Y, dY_dx):
     """Derivative of G(x, Y, dY_dx) wrt Y"""
     return x + (1 + 3*x**2)/(1 + x + x**3)
+
 
 def dG_ddYdx(x, y, dY_dx):
     """Derivative of G(x, Y, dY_dx) wrt dY/dx"""
     return 1
 
+
 def Ya(x):
     """Analytical solution"""
     return exp(-x**2/2)/(1 + x + x**3) + x**2
 
+
 def dYa_dx(x):
     """1st derivative of analytical solution"""
     return 2*x - exp(-x**2/2)*(1 + x + 4*x**2 + x**4)/(1 + x + x**3)**2
+
 
 if __name__ == '__main__':
     assert G(0, 0, 0) == 0

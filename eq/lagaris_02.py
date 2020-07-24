@@ -2,7 +2,8 @@
 This module implements problem 2 in Lagaris et al (1998) (1st order ODE
 IVP).
 
-Note that an upper-case 'Y' is used to represent the Greek psi from the original equation.
+Note that an upper-case 'Y' is used to represent the Greek psi from the
+original equation.
 
 The equation is defined on the domain [0,1]:
 
@@ -40,17 +41,21 @@ def G(x, Y, dY_dx):
     """
     return dY_dx + Y/5 - exp(-x/5)*cos(x)
 
+
 def dG_dY(x, Y, dY_dx):
     """Derivative of G(x, Y, dY_dx) wrt Y"""
     return 1/5
+
 
 def dG_ddYdx(x, y, dY_dx):
     """Derivative of G(x, Y, dY_dx) wrt dY/dx"""
     return 1
 
+
 def Ya(x):
     """Analytical solution"""
     return exp(-x/5)*sin(x)
+
 
 def dYa_dx(x):
     """1st derivative of analytical solution"""
