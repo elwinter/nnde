@@ -17,8 +17,8 @@ Attributes:
 Methods:
     __init__() - Constructor
     G - Function for differential equation, in the form G() = 0,
-    where G() is a function of the independent variables x, the solution
-    Y(x), and the Jacobian, Hessian, and higher derivatives of Y(x).
+    where G() is a function of the independent variable x, the solution
+    Y(x), and the first derivative dY/x.
 
 Todo:
     * Add function annotations.
