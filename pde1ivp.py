@@ -21,7 +21,7 @@ Attributes:
     bc[] - Vector of boundary condition functions for each variable;
       only first element in each row is used since IVP
     dG_dY - Function for derivative of Gf wrt Y
-    dG_ddelY - Array of function for derivative of Gf wrt dY/dx[j]
+    dG_ddelY - Array of functions for derivative of Gf wrt dY/dx[j]
     Ya - (Optional) function for analytical solution Ya(x)
     delYa - (Optional) Array of functions for analytical Jacobian of solution
 
@@ -44,7 +44,8 @@ class PDE1IVP(PDE1):
         """
         Constructor
         Parameters:
-        diffeqmod - The name of the Python module containing the problem definition.
+        diffeqmod - The name of the Python module containing the problem
+        definition.
         """
         super().__init__()
         self.name = None

@@ -4,6 +4,9 @@ PDE1 - Base class for 1st-order partial differential equations
 This module provides the base functionality for all 1st-order partial
 differential equation objects used in the nnode software.
 
+This class is currently an abstract base class. It must be subclassed
+to be useful.
+
 Example:
     Create an empty ODE1 object.
         pde1 = PDE1()
@@ -16,10 +19,14 @@ Attributes:
     None
 
 Methods:
-    None
+    __init__() - Constructor
+    G - Function for differential equation, in the form G() = 0,
+    where G() is a function of the independent variables x, the solution
+    Y(x), and the Jacobian of Y(x).
 
 Todo:
-    None
+    * Add function annotations.
+    * Add variable annotations.
 """
 
 
@@ -34,7 +41,6 @@ class PDE1(PDE):
 
     def G(self, x, Y, delY):
         return None
-
 
 
 if __name__ == '__main__':
