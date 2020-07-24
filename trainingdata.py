@@ -68,6 +68,7 @@ def create_training_grid(n):
     # Return the list of training points.
     return X
 
+
 def prod(n):
     """Compute the product of the elements of a list of numbers."""
     p = 1

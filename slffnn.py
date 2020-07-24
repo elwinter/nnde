@@ -4,7 +4,7 @@ SLFFNN - Base class for single-layer feed-forward neural networks
 This module provides the base functionality for all single-layer feed-forward
 neural network objects used in the nnode software.
 
-This class is currently an abstract base class. It must be subclassed    
+This class is currently an abstract base class. It must be subclassed
 to be useful.
 
 Example:

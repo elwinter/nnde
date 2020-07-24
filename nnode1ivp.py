@@ -92,7 +92,8 @@ s2_v = np.vectorize(sigma.s2)
 
 
 class NNODE1IVP(SLFFNN):
-    """Solve a 1st-order ODE IVP with a single-layer feedforward neural network."""
+    """Solve a 1st-order ODE IVP with a single-layer feedforward neural
+    network."""
 
     # Public methods
 
@@ -586,7 +587,7 @@ class NNODE1IVP(SLFFNN):
             for k in range(H):
                 for i in range(n):
                     dE_dv[k] += 2*G[i]*dG_dv[i, k]
-  
+
             # Compute the RMS error for this epoch.
             rmse = sqrt(E/n)
             if verbose:
@@ -649,7 +650,8 @@ class NNODE1IVP(SLFFNN):
     def _compute_error(self, p, x):
         """Compute the error function using the current parameter values."""
 
-        # Unpack the network parameters (hsplit() returns views, so no copies made).
+        # Unpack the network parameters (hsplit() returns views, so no copies
+        # made).
         (w, u, v) = np.hsplit(p, 3)
 
         # Compute the forward pass through the network.
@@ -666,7 +668,8 @@ class NNODE1IVP(SLFFNN):
         return E
 
     def _compute_error_debug(self, p, x):
-        """Compute the error function using the current parameter values (debug version)."""
+        """Compute the error function using the current parameter values
+        (debug version)."""
 
         # Fetch the number of training points.
         n = len(x)
@@ -718,7 +721,8 @@ class NNODE1IVP(SLFFNN):
         # Fetch the number of training points.
         n = len(x)
 
-        # Unpack the network parameters (hsplit() returns views, so no copies made).
+        # Unpack the network parameters (hsplit() returns views, so no copies
+        # made).
         H = len(self.v)
         (w, u, v) = np.hsplit(p, 3)
 
@@ -728,10 +732,11 @@ class NNODE1IVP(SLFFNN):
         s1 = s1_v(s)
         s2 = s2_v(s)
 
-        # WARNING: Numpy and loop code below can give different results with Newton-CG after
-        # a few iterations. The differences are very slight, but they result in significantly
-        # different values for the weights and biases. To avoid this for now, loop code has been
-        # retained for some computations below.
+        # WARNING: Numpy and loop code below can give different results with
+        # Newton-CG after a few iterations. The differences are very slight,
+        # but they result in significantly different values for the weights
+        # and biases. To avoid this for now, loop code has been retained for
+        # some computations below.
 
         # N = s.dot(v)
         N = np.zeros(n)
@@ -774,9 +779,12 @@ class NNODE1IVP(SLFFNN):
         G = self.G_v(x, Yt, dYt_dx)
         dG_dYt = self.dG_dY_v(x, Yt, dYt_dx)
         dG_dYtdx = self.dG_ddYdx_v(x, Yt, dYt_dx)
-        dG_dw = np.broadcast_to(dG_dYt, (H, n)).T*dYt_dw + np.broadcast_to(dG_dYtdx, (H, n)).T*d2Yt_dwdx
-        dG_du = np.broadcast_to(dG_dYt, (H, n)).T*dYt_du + np.broadcast_to(dG_dYtdx, (H, n)).T*d2Yt_dudx
-        dG_dv = np.broadcast_to(dG_dYt, (H, n)).T*dYt_dv + np.broadcast_to(dG_dYtdx, (H, n)).T*d2Yt_dvdx
+        dG_dw = (np.broadcast_to(dG_dYt, (H, n)).T*dYt_dw
+                 + np.broadcast_to(dG_dYtdx, (H, n)).T*d2Yt_dwdx)
+        dG_du = (np.broadcast_to(dG_dYt, (H, n)).T*dYt_du
+                 + np.broadcast_to(dG_dYtdx, (H, n)).T*d2Yt_dudx)
+        dG_dv = (np.broadcast_to(dG_dYt, (H, n)).T*dYt_dv
+                 + np.broadcast_to(dG_dYtdx, (H, n)).T*d2Yt_dvdx)
 
         dE_dw = 2*np.sum(np.broadcast_to(G, (H, n)).T*dG_dw, axis=0)
         dE_du = 2*np.sum(np.broadcast_to(G, (H, n)).T*dG_du, axis=0)
@@ -793,7 +801,8 @@ class NNODE1IVP(SLFFNN):
         # Fetch the number of training points.
         n = len(x)
 
-        # Unpack the network parameters (hsplit() returns views, so no copies made).
+        # Unpack the network parameters (hsplit() returns views, so no copies
+        # made).
         H = len(self.v)
         (w, u, v) = np.hsplit(p, 3)
 
@@ -911,17 +920,20 @@ class NNODE1IVP(SLFFNN):
         dG_dw = np.zeros((n, H))
         for i in range(n):
             for k in range(H):
-                dG_dw[i, k] = dG_dYt[i]*dYt_dw[i, k] + dG_ddYtdx[i]*d2Yt_dwdx[i, k]
+                dG_dw[i, k] = (dG_dYt[i]*dYt_dw[i, k]
+                               + dG_ddYtdx[i]*d2Yt_dwdx[i, k])
 
         dG_du = np.zeros((n, H))
         for i in range(n):
             for k in range(H):
-                dG_du[i, k] = dG_dYt[i]*dYt_du[i, k] + dG_ddYtdx[i]*d2Yt_dudx[i, k]
+                dG_du[i, k] = (dG_dYt[i]*dYt_du[i, k]
+                               + dG_ddYtdx[i]*d2Yt_dudx[i, k])
 
         dG_dv = np.zeros((n, H))
         for i in range(n):
             for k in range(H):
-                dG_dv[i, k] = dG_dYt[i]*dYt_dv[i, k] + dG_ddYtdx[i]*d2Yt_dvdx[i, k]
+                dG_dv[i, k] = (dG_dYt[i]*dYt_dv[i, k]
+                               + dG_ddYtdx[i]*d2Yt_dvdx[i, k])
 
         dE_dw = np.zeros(H)
         for k in range(H):
@@ -990,7 +1002,8 @@ if __name__ == '__main__':
         print()
 
         # Create and train the networks.
-        for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS', 'Newton-CG'):
+        for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS',
+                         'Newton-CG'):
             print('Training using %s algorithm.' % trainalg)
             net = NNODE1IVP(ode1ivp)
             print(net)
