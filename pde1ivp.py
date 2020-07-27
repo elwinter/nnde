@@ -51,6 +51,7 @@ class PDE1IVP(PDE1):
         self.name = None
         self.G = None
         self.bc = None
+        self.delbc = None
         self.dG_dY = None
         self.dG_ddelY = None
         self.Ya = None
@@ -60,10 +61,12 @@ class PDE1IVP(PDE1):
             pdemod = import_module(diffeqmod)
             assert pdemod.G
             assert pdemod.bc is not None
+            assert pdemod.delbc is not None
             assert pdemod.dG_dY
             assert pdemod.dG_ddelY
             self.G = pdemod.G
             self.bc = pdemod.bc
+            self.delbc = pdemod.delbc
             self.dG_dY = pdemod.dG_dY
             self.dG_ddelY = pdemod.dG_ddelY
             if pdemod.Ya:

@@ -47,7 +47,9 @@ def f0(xy):
     return sin(y)
 
 
-f1 = None
+def f1(xy):
+    """No boundary condition is specified at x=1."""
+    return None
 
 
 def g0(xy):
@@ -56,10 +58,58 @@ def g0(xy):
     return sin(-x/2)
 
 
-g1 = None
+def g1(xy):
+    """No boundary condition is specified at y=1."""
+    return None
 
 
 bc = [[f0, f1], [g0, g1]]
+
+
+def df0_dx(xy):
+    """Derivatve of f(0, y) wrt x"""
+    return 0
+
+
+def df0_dy(xy):
+    """Derivatve of f(0, y) wrt y"""
+    (x, y) = xy
+    return cos(y)
+
+
+def df1_dx(xy):
+    """No boundary condition is specified at x=1."""
+    return None
+
+
+def df1_dy(xy):
+    """No boundary condition is specified at x=1."""
+    return None
+
+
+def dg0_dx(xy):
+    """Derivative of g0(x, 0) wrt x"""
+    (x, y) = xy
+    return -cos(-x/2)/2
+
+
+def dg0_dy(xy):
+    """Derivative of g0(x, 0) wrt y"""
+    return 0
+
+
+def dg1_dx(xy):
+    """No boundary condition is specified at y=1."""
+    return None
+
+
+def dg1_dy(xy):
+    """No boundary condition is specified at y=1."""
+    return None
+
+
+delbc = [[[df0_dx, df0_dy], [df1_dx, df1_dy]],
+         [[dg0_dx, dg0_dy], [dg1_dx, dg1_dy]]]
 
 
 def dG_dY(xy, Y, delY):
