@@ -8,7 +8,7 @@ This class is currently an abstract base class. It must be subclassed
 to be useful.
 
 Example:
-    Create an empty ODE1 object.
+    Create an empty PDE1 object.
         pde1 = PDE1()
 
 The solution is assumed to be a function of m independent variables. In the
