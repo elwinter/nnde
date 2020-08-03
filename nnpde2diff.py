@@ -22,7 +22,10 @@ Attributes:
     None
 
 Methods:
-    None
+    train()
+    run()
+    run_gradient()
+    run_laplacian()
 
 Todo:
     * Add function annotations.
@@ -46,7 +49,7 @@ import sigma
 from slffnn import SLFFNN
 from trainingdata import create_training_grid
 
-# # Default values for method parameters
+# Default values for method parameters
 DEFAULT_DEBUG = False
 DEFAULT_ETA = 0.1
 DEFAULT_MAXEPOCHS = 1000
@@ -111,6 +114,22 @@ class NNPDE2DIFF(SLFFNN):
 
         # Initialize iteration counter.
         self.nit = 0
+
+#         # If the supplied equation object has optimized versions of the
+#         # boundary condition function and derivatives, use them.
+#         pdemod = import_module(eq.name)
+#         if hasattr(pdemod, 'Af'):
+#             print("Using optimized Af().")
+#             self.tf.Af = pdemod.Af
+#         if hasattr(pdemod, 'delAf'):
+#             print("Using optimized delAf().")
+#             self.tf.delAf = pdemod.delAf
+#         if hasattr(pdemod, 'del2Af'):
+#             print("Using optimized del2Af().")
+#             self.tf.del2Af = pdemod.del2Af
+
+#         # Create the parameter history array.
+#         self.phist = np.hstack((self.w.flatten(), self.u, self.v))
 
     def train(self, x, trainalg=DEFAULT_TRAINALG, opts=DEFAULT_OPTS):
         """Train the network to solve a 2-D diffusion problem"""
@@ -181,6 +200,16 @@ class NNPDE2DIFF(SLFFNN):
             Yt[i] = self.tf.Yt(x[i], N[i])
 
         return Yt
+
+    # def run_gradient(self, x):
+    #     """Compute the trained derivative (debug version)."""
+    #     n = len(x)
+    #     H = len(self.v)
+    #     w = self.w
+    #     u = self.u
+    #     v = self.v
+
+    #     BLAHBLAHBLAH
 
     def run_gradient_debug(self, x):
         """Compute the trained derivative (debug version)."""
@@ -310,41 +339,7 @@ class NNPDE2DIFF(SLFFNN):
 
         return del2Yt
 
-#     # Internal methods below this point
-
-#         # If the supplied equation object has optimized versions of the
-#         # boundary condition function and derivatives, use them.
-#         pdemod = import_module(eq.name)
-#         if hasattr(pdemod, 'Af'):
-#             print("Using optimized Af().")
-#             self.tf.Af = pdemod.Af
-#         if hasattr(pdemod, 'delAf'):
-#             print("Using optimized delAf().")
-#             self.tf.delAf = pdemod.delAf
-#         if hasattr(pdemod, 'del2Af'):
-#             print("Using optimized del2Af().")
-#             self.tf.del2Af = pdemod.del2Af
-
-#         # Create the weight and bias arrays.
-#         self.w = np.zeros((m, nhid))
-#         self.u = np.zeros(nhid)
-#         self.v = np.zeros(nhid)
-
-#         # Create the parameter history array.
-#         self.phist = np.hstack((self.w.flatten(), self.u, self.v))
-
-#         # Initialize results from minimize().
-#         self.nit = 0
-#         self.res = None
-
-#     def __str__(self):
-#         s = ''
-#         s += "NNPDEDIFF:\n"
-#         s += "%s\n" % self.eq
-#         s += "w = %s\n" % self.w
-#         s += "u = %s\n" % self.u
-#         s += "v = %s\n" % self.v
-#         return s.rstrip()
+    # Internal methods below this point
 
 #     def __train_delta(self, x, opts=DEFAULT_OPTS):
 #         """Train using the delta method."""
@@ -996,7 +991,6 @@ class NNPDE2DIFF(SLFFNN):
 # Self-test code
 
 if __name__ == '__main__':
-    pass
 
     # Create training data.
     nx = 10
