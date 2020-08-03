@@ -43,6 +43,9 @@ class PDE2DIFF(PDE2):
         self.bc = None
         self.delbc = None
         self.del2bc = None
+        self.dG_dY = None
+        self.dG_ddelY = None
+        self.dG_ddel2Y = None
         self.Ya = None
         self.delYa = None
         self.del2Ya = None
@@ -57,6 +60,12 @@ class PDE2DIFF(PDE2):
             self.delbc = pdemod.delbc
             assert pdemod.del2bc
             self.del2bc = pdemod.del2bc
+            assert pdemod.dG_dY
+            self.dG_dY = pdemod.dG_dY
+            assert pdemod.dG_ddelY
+            self.dG_ddelY = pdemod.dG_ddelY
+            assert pdemod.dG_ddel2Y
+            self.dG_ddel2Y = pdemod.dG_ddel2Y
             self.Ya = pdemod.Ya or None
             self.delYa = pdemod.delYa or None
             self.del2Ya = pdemod.del2Ya or None
