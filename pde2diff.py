@@ -46,6 +46,9 @@ class PDE2DIFF(PDE2):
         self.dG_dY = None
         self.dG_ddelY = None
         self.dG_ddel2Y = None
+        self.A = None
+        self.delA = None
+        self.del2A = None
         self.Ya = None
         self.delYa = None
         self.del2Ya = None
@@ -66,6 +69,9 @@ class PDE2DIFF(PDE2):
             self.dG_ddelY = pdemod.dG_ddelY
             assert pdemod.dG_ddel2Y
             self.dG_ddel2Y = pdemod.dG_ddel2Y
+            self.A = pdemod.A or None
+            self.delA = pdemod.delA or None
+            self.del2A = pdemod.del2A or None
             self.Ya = pdemod.Ya or None
             self.delYa = pdemod.delYa or None
             self.del2Ya = pdemod.del2Ya or None
@@ -74,3 +80,4 @@ class PDE2DIFF(PDE2):
 if __name__ == '__main__':
     pde2diff = PDE2DIFF('eq.diff1d_zero')
     print(pde2diff)
+    print(pde2diff.A)

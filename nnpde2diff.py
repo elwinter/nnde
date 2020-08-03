@@ -115,18 +115,17 @@ class NNPDE2DIFF(SLFFNN):
         # Initialize iteration counter.
         self.nit = 0
 
-#         # If the supplied equation object has optimized versions of the
-#         # boundary condition function and derivatives, use them.
-#         pdemod = import_module(eq.name)
-#         if hasattr(pdemod, 'Af'):
-#             print("Using optimized Af().")
-#             self.tf.Af = pdemod.Af
-#         if hasattr(pdemod, 'delAf'):
-#             print("Using optimized delAf().")
-#             self.tf.delAf = pdemod.delAf
-#         if hasattr(pdemod, 'del2Af'):
-#             print("Using optimized del2Af().")
-#             self.tf.del2Af = pdemod.del2Af
+        # If the supplied equation object has optimized versions of the
+        # boundary condition function and derivatives, use them.
+        if hasattr(self.eq, 'A'):
+            print("Using optimized A().")
+            self.tf.A = self.eq.A
+        if hasattr(self.eq, 'delA'):
+            print("Using optimized delA().")
+            self.tf.delA = self.eq.delA
+        if hasattr(self.eq, 'del2A'):
+            print("Using optimized del2A().")
+            self.tf.del2A = self.eq.del2A
 
 #         # Create the parameter history array.
 #         self.phist = np.hstack((self.w.flatten(), self.u, self.v))
@@ -1006,7 +1005,7 @@ if __name__ == '__main__':
     training_opts['debug'] = False
     training_opts['verbose'] = True
     training_opts['eta'] = 0.01
-    training_opts['maxepochs'] = 1000
+    training_opts['maxepochs'] = 2
 
     # Test each training algorithm on each equation.
     for pde in ('eq.diff1d_zero',):
@@ -1076,7 +1075,8 @@ if __name__ == '__main__':
                 print()
                 continue
 
-            # print(net.res)
+            if net.res:
+                print(net.res)
             print('The trained network is:')
             print(net)
 
