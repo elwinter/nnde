@@ -108,3 +108,4 @@ venv.bak/
 
 # Emacs backup files
 *~
+.vscode/settings.json
