@@ -168,17 +168,19 @@ def dG_d2Y_dt2(xt, Y, delY, del2Y):
 dG_ddel2Y = [dG_d2Y_dx2, dG_d2Y_dt2]
 
 
-# def Af(xt):
-#     """Optimized version of boundary condition function"""
-#     return C
+def A(xt):
+    """Optimized version of boundary condition function"""
+    return C
 
-# def delAf(xt):
-#     """Optimized version of boundary condition function gradient"""
-#     return [0, 0]
 
-# def del2Af(xt):
-#     """Optimized version of boundary condition function Laplacian"""
-#     return [0, 0]
+def delA(xt):
+    """Optimized version of boundary condition function gradient"""
+    return [0, 0]
+
+
+def del2A(xt):
+    """Optimized version of boundary condition function Laplacian"""
+    return [0, 0]
 
 
 def Ya(xt):
@@ -232,9 +234,9 @@ if __name__ == '__main__':
                   ((0, 0), (None, None)))
     dG_ddelY_ref = (0, 1)
     dG_ddel2Y_ref = (-D, 0)
-    # A_ref = C
-    # delA_ref = [0, 0]
-    # del2A_ref = [0, 0]
+    A_ref = C
+    delA_ref = [0, 0]
+    del2A_ref = [0, 0]
     Ya_ref = C
     delYa_ref = (0, 0)
     del2Ya_ref = (0, 0)
@@ -285,18 +287,19 @@ if __name__ == '__main__':
         assert np.isclose(dG_ddel2Y[j](x_test, Y_test, delY_test, del2Y_test),
                           dG_ddel2Y_ref[j])
 
-    # print("Testing optimized BC function.")
-    # assert np.isclose(Af(xt), A_ref)
+    print("Testing optimized BC function.")
+    A_ = A(x_test)
+    assert np.isclose(A_, A_ref)
 
-    # print("Testing optimized BC function gradient.")
-    # delA = delAf(xt)
-    # for i in range(len(delA_ref)):
-    #     assert np.isclose(delA[i], delA_ref[i])
+    print("Testing optimized BC function gradient.")
+    delA_ = delA(x_test)
+    for j in range(m):
+        assert np.isclose(delA_[j], delA_ref[j])
 
-    # print("Testing optimized BC function Laplacian.")
-    # del2A = del2Af(xt)
-    # for i in range(len(del2A_ref)):
-    #     assert np.isclose(del2A[i], del2A_ref[i])
+    print("Testing optimized BC function Laplacian.")
+    del2A_ = del2A(x_test)
+    for j in range(m):
+        assert np.isclose(del2A_[j], del2A_ref[j])
 
     print("Testing analytical solution.")
     assert np.isclose(Ya(x_test), Ya_ref)
