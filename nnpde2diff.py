@@ -1005,7 +1005,7 @@ if __name__ == '__main__':
     training_opts['debug'] = False
     training_opts['verbose'] = True
     training_opts['eta'] = 0.01
-    training_opts['maxepochs'] = 2
+    training_opts['maxepochs'] = 1000
 
     # Test each training algorithm on each equation.
     for pde in ('eq.diff1d_zero',):
@@ -1037,7 +1037,7 @@ if __name__ == '__main__':
             Ya = np.zeros(n)
             for i in range(n):
                 Ya[i] = eq.Ya(x_train[i])
-            # print('Ya =', Ya)
+            print('Ya =', Ya)
 
         # Analytical gradient (if available)
         delYa = None
@@ -1047,7 +1047,7 @@ if __name__ == '__main__':
             for i in range(n):
                 for j in range(m):
                     delYa[i][j] = eq.delYa[j](x_train[i])
-            # print('delYa =', delYa)
+            print('delYa =', delYa)
 
         # Analytical Laplacian (if available)
         del2Ya = None
@@ -1057,7 +1057,7 @@ if __name__ == '__main__':
             for i in range(n):
                 for j in range(m):
                     del2Ya[i][j] = eq.del2Ya[j](x_train[i])
-            # print('del2Ya =', del2Ya)
+            print('del2Ya =', del2Ya)
 
         # for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS',
         #                  'Newton-CG'):
