@@ -1,55 +1,42 @@
 """
 TrialFunction - Base class for trial functions
 
-Notes:
+This module provides the base functionality for all trial function objects
+used in the nnde software.
 
-Only for 2nd-order PDEs.
+This class is currently an abstract base class. It must be subclassed
+to be useful.
+
+Example:
+    Create an empty TrialFunction object.
+        tf = TrialFunction()
 
 Attributes:
+    None
 
 Methods:
-
-    Ytf(xv, N) - Compute trial function at xv with network output N.
-
-    delYtf(xv, N, delN) - Compute trial function gradient at xv with
-        network output N and network output gradient delN.
-
-    deldelYtf(xv, N, delN, deldelN) - Compute trial function Hessian
-        at xv with network output N, network output gradient
-        delN, and network output Hessian deldelN
+    Yt(x, N) - Evaluate the trial function given coordinate vector x and
+    scalar network output N
 
 Todo:
-
+    * Add function annotations.
+    * Add variable annotations.
 """
 
 
 class TrialFunction():
     """Trial function base class"""
 
-
-    # Public methods
-
     def __init__(self):
         """Constructor"""
         pass
 
-    def Ytf(self, xv, N):
+    def Yt(self, x, N):
         """Trial function"""
         return None
-
-    def delYtf(self, xv, N, delN):
-        """Trial function gradient"""
-        return None
-
-    def deldelYtf(self, xv, N, delN, deldelN):
-        """Trial function Hessian"""
-        return 
 
 
 if __name__ == '__main__':
     tf = TrialFunction()
     print(tf)
-    assert tf.Ytf(None, None) is None
-    assert tf.delYtf(None, None, None) is None
-    assert tf.deldelYtf(None, None, None, None) is None
-    
+    assert tf.Yt(None, None) is None
