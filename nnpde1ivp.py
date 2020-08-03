@@ -117,14 +117,14 @@ class NNPDE1IVP(SLFFNN):
         my_opts.update(opts)
 
         if trainalg == 'delta':
-            self._train_delta_debug(x, my_opts)
+            self._train_delta(x, my_opts)
         elif trainalg in ('Nelder-Mead', 'Powell', 'CG', 'BFGS',
                           'Newton-CG'):
             self._train_minimize(x, trainalg, my_opts)
         else:
             print('ERROR: Invalid training algorithm (%s)!' % trainalg)
             exit(1)
-
+INCOMPLETE
     # def run(self, x):
     #     """Compute the trained solution."""
     #     w = self.w
@@ -298,81 +298,96 @@ class NNPDE1IVP(SLFFNN):
 
     _delYt = [_dYt_dx, _dYt_dy]
 
-#     def _train_delta(self, x, opts=DEFAULT_OPTS):
-#         """Train the network using the delta method. """
+    def _train_delta(self, x, opts=DEFAULT_OPTS):
+        """Train the network using the delta method. """
 
-#         my_opts = dict(DEFAULT_OPTS)
-#         my_opts.update(opts)
+        my_opts = dict(DEFAULT_OPTS)
+        my_opts.update(opts)
 
-#         # Sanity-check arguments.
-#         assert len(x) > 0
-#         assert opts['maxepochs'] > 0
-#         assert opts['eta'] > 0
-#         assert opts['vmin'] < opts['vmax']
-#         assert opts['wmin'] < opts['wmax']
-#         assert opts['umin'] < opts['umax']
+        # Sanity-check arguments.
+        assert len(x) > 0
+        assert opts['maxepochs'] > 0
+        assert opts['eta'] > 0
+        assert opts['vmin'] < opts['vmax']
+        assert opts['wmin'] < opts['wmax']
+        assert opts['umin'] < opts['umax']
 
-#         # Determine the number of training points, and change notation for
-#         # convenience.
-#         n = len(x)  # Number of training points
-#         H = len(self.v)
-#         debug = my_opts['debug']
-#         verbose = my_opts['verbose']
-#         eta = my_opts['eta']  # Learning rate
-#         maxepochs = my_opts['maxepochs']  # Number of training epochs
-#         wmin = my_opts['wmin']  # Network parameter limits
-#         wmax = my_opts['wmax']
-#         umin = my_opts['umin']
-#         umax = my_opts['umax']
-#         vmin = my_opts['vmin']
-#         vmax = my_opts['vmax']
+        # Determine the number of training points, independent variables, and
+        # hidden nodes.
+        n = len(x)  # Number of training points
+        m = len(self.eq.bc)
+        H = len(self.v)   # Number of hidden nodes
 
-#         # Create the hidden node weights, biases, and output node weights.
-#         w = np.random.uniform(wmin, wmax, H)
-#         u = np.random.uniform(umin, umax, H)
-#         v = np.random.uniform(vmin, vmax, H)
+        # Change notation for convenience.
+        debug = my_opts['debug']
+        verbose = my_opts['verbose']
+        eta = my_opts['eta']  # Learning rate
+        maxepochs = my_opts['maxepochs']  # Number of training epochs
+        wmin = my_opts['wmin']  # Network parameter limits
+        wmax = my_opts['wmax']
+        umin = my_opts['umin']
+        umax = my_opts['umax']
+        vmin = my_opts['vmin']
+        vmax = my_opts['vmax']
 
-#         # Initial parameter deltas are 0.
-#         dE_dw = np.zeros(H)
-#         dE_du = np.zeros(H)
-#         dE_dv = np.zeros(H)
+        # Create the hidden node weights, biases, and output node weights.
+        w = np.random.uniform(wmin, wmax, (m, H))
+        u = np.random.uniform(umin, umax, H)
+        v = np.random.uniform(vmin, vmax, H)
 
-#         # Train the network.
-#         for epoch in range(maxepochs):
-#             if debug:
-#                 print('Starting epoch %d.' % epoch)
+        # Initial parameter deltas are 0.
+        dE_dw = np.zeros((m, H))
+        dE_du = np.zeros(H)
+        dE_dv = np.zeros(H)
 
-#             # Compute the new values of the network parameters.
-#             w -= eta*dE_dw
-#             u -= eta*dE_du
-#             v -= eta*dE_dv
+        # Train the network.
+        for epoch in range(maxepochs):
+            if debug:
+                print('Starting epoch %d.' % epoch)
 
-#             # Compute the input, the sigmoid function, and its derivatives,
-#             # for each hidden node and training point.
-#             # x is nx1, w, u are 1xH
-#             # z, s, s1, s2 are nxH
-#             z = np.outer(x, w) + u
-#             s = s_v(z)
-#             s1 = s1_v(s)
-#             s2 = s2_v(s)
+            # Compute the new values of the network parameters.
+            w -= eta*dE_dw
+            u -= eta*dE_du
+            v -= eta*dE_dv
 
-#             # Compute the network output and its derivatives, for each
-#             # training point.
-#             # s, v are Hx1
-#             # N is scalar
-#             N = s.dot(v)
-#             dN_dx = s1.dot(v*w)
-#             dN_dw = s1*np.outer(x, v)
-#             dN_du = s1*v
-#             dN_dv = np.copy(s)
-#             d2N_dwdx = v*(s1 + s2*np.outer(x, w))
-#             d2N_dudx = v*s2*w
-#             d2N_dvdx = s1*w
+            # Compute the input, the sigmoid function, and its derivatives,
+            # for each hidden node and training point.
+            # x is nx1, w, u are 1xH
+            # z, s, s1, s2 are nxH
+            z = np.dot(x, w) + u
+            s = s_v(z)
+            s1 = s1_v(s)
+            s2 = s2_v(s)
 
-#             # Compute the value of the trial solution, its coefficients,
-#             # and derivatives, for each training point.
-#             Yt = self.Yt_v(x, N)
-#             dYt_dx = self.dYt_dx_v(x, N, dN_dx)
+            # Compute the network output and its derivatives, for each
+            # training point.
+            # s, v are Hx1
+            # N is scalar
+            N = s.dot(v)
+            P = np.zeros(n)
+            for i in range(n):
+                P[i] = self._P(x[i])
+            delN = np.dot(s1, (v*w).T)
+            dN_dw = (v[np.newaxis, np.newaxis, :]
+                     * s1[:, np.newaxis, :]*x[:, :, np.newaxis])
+            dN_du = v*s1
+            dN_dv = np.copy(s)
+            d2N_dwdx = np.zeros((n, m, m, H))
+            for i in range(n):
+                for j in range(m):
+                    for jj in range(m):
+                        d2N_dwdx[i, j, jj] = v*(s1[i]*kdelta(j, jj) +
+                                                s2[i]*w[jj]*x[i, j])
+
+            d2N_dudx = (v[np.newaxis, np.newaxis, :]
+                        * s2[:, np.newaxis, :]*w[np.newaxis, :, :])
+            d2N_dvdx = s1[:, np.newaxis, :]*w[np.newaxis, :, :]
+
+            # Compute the value of the trial solution, its coefficients,
+            # and derivatives, for each training point.
+            Yt = self.Yt_v(x, N)
+            RESUME HERE
+            delYt = self.dYt_dx_v(x, N, dN_dx)
 #             # Temporary broadcast version of x.
 #             x_b = np.broadcast_to(x, (H, n)).T
 #             dYt_dw = x_b*dN_dw
@@ -435,8 +450,7 @@ class NNPDE1IVP(SLFFNN):
         m = len(self.eq.bc)
         H = len(self.v)   # Number of hidden nodes
 
-        #  and change notation for
-        # convenience.
+        # Change notation for convenience.
         debug = my_opts['debug']
         verbose = my_opts['verbose']
         eta = my_opts['eta']  # Learning rate
