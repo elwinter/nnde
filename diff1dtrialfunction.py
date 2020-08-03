@@ -61,7 +61,6 @@ class Diff1DTrialFunction(TrialFunction):
         self.delbc = delbc
         self.del2bc = del2bc
 
-
     def A(self, xt):
         """Boundary condition function"""
         (x, t) = xt
