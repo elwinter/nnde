@@ -1008,7 +1008,7 @@ if __name__ == '__main__':
     training_opts['maxepochs'] = 1000
 
     # Test each training algorithm on each equation.
-    for pde in ('eq.diff1d_zero',):
+    for pde in ('eq.diff1d_zero', 'eq.diff1d_half', 'eq.diff1d_one'):
         print('Examining %s.' % pde)
 
         # Read the equation definition.
