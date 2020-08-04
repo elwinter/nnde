@@ -124,7 +124,7 @@ class NNPDE1IVP(SLFFNN):
         else:
             print('ERROR: Invalid training algorithm (%s)!' % trainalg)
             exit(1)
-INCOMPLETE
+
     # def run(self, x):
     #     """Compute the trained solution."""
     #     w = self.w
