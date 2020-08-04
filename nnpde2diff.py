@@ -36,7 +36,7 @@ Todo:
 # from importlib import import_module
 from math import sqrt
 import numpy as np
-# from scipy.optimize import minimize
+from scipy.optimize import minimize
 # import sys
 # import types
 
@@ -137,11 +137,11 @@ class NNPDE2DIFF(SLFFNN):
 
         if trainalg == 'delta':
             self._train_delta_debug(x, opts=my_opts)
-#         elif trainalg in ('Nelder-Mead', 'Powell', 'CG', 'BFGS'):
-#             self.__train_minimize(x, trainalg, opts=my_opts, options=options)
-#         else:
-#             print('ERROR: Invalid training algorithm (%s)!' % trainalg)
-#             exit(1)
+        elif trainalg in ('Nelder-Mead', 'Powell', 'CG', 'BFGS'):
+            self._train_minimize(x, trainalg, opts=my_opts)
+        else:
+            print('ERROR: Invalid training algorithm (%s)!' % trainalg)
+            exit(1)
 
 #     def run(self, x):
 #         """Compute the trained solution."""
@@ -892,49 +892,50 @@ class NNPDE2DIFF(SLFFNN):
         self.u = u
         self.v = v
 
-#     def __train_minimize(self, x, trainalg, opts=DEFAULT_OPTS,
-#                          options=None):
-#         """Train using the scipy minimize() function"""
+    def _train_minimize(self, x, trainalg, opts=DEFAULT_OPTS):
+        """Train the network using the SciPy minimize() function. """
 
-#         my_opts = dict(DEFAULT_OPTS)
-#         my_opts.update(opts)
+        my_opts = dict(DEFAULT_OPTS)
+        my_opts.update(opts)
 
-#         # Sanity-check arguments.
-#         assert x.any()
-#         assert opts['vmin'] < opts['vmax']
-#         assert opts['wmin'] < opts['wmax']
-#         assert opts['umin'] < opts['umax']
+        # Sanity-check arguments.
+        assert len(x) > 0
+        assert opts['vmin'] < opts['vmax']
+        assert opts['wmin'] < opts['wmax']
+        assert opts['umin'] < opts['umax']
 
-#         callback = None
-#         if my_opts['verbose']:
-#             callback = self.__print_progress
+        # Create the hidden node weights, biases, and output node weights.
+        m = len(self.eq.bc)
+        H = len(self.v)
 
-#         # -----------------------------------------------------------------
+        # Create the hidden node weights, biases, and output node weights.
+        w = np.random.uniform(my_opts['wmin'], my_opts['wmax'], (m, H))
+        u = np.random.uniform(my_opts['umin'], my_opts['umax'], H)
+        v = np.random.uniform(my_opts['vmin'], my_opts['vmax'], H)
 
-#         # Create the hidden node weights, biases, and output node weights.
-#         m = len(self.eq.bcf)
-#         H = my_opts['nhid']
-#         self.w = np.random.uniform(my_opts['wmin'], my_opts['wmax'], (m, H))
-#         self.u = np.random.uniform(my_opts['umin'], my_opts['umax'], H)
-#         self.v = np.random.uniform(my_opts['vmin'], my_opts['vmax'], H)
+        # Assemble the network parameters into a single 1-D vector for
+        # use by the minimize() method.
+        p = np.hstack((self.w.flatten(), self.u, self.v))
 
-#         # Assemble the network parameters into a single 1-D vector for
-#         # use by the minimize() method.
-#         p = np.hstack((self.w.flatten(), self.u, self.v))
+        # Add the status callback if requested.
+        callback = None
+        if my_opts['verbose']:
+            callback = self._print_progress
 
-#         res = minimize(self.__compute_error, p, method=trainalg,
-#                        args=(x), jac=None, hess=None,
-#                        options=options, callback=callback)
+        # Minimize the error function to get the new parameter values.
+        if trainalg in ('Nelder-Mead', 'Powell', 'CG', 'BFGS'):
+            jac = None
+        elif trainalg in ('Newton-CG',):
+            jac = self.__compute_error_gradient
+        res = minimize(self._compute_error_debug, p, method=trainalg,
+                       jac=jac, args=(x), callback=callback)
+        self.res = res
 
-#         if my_opts['verbose']:
-#             print('res =', res)
-#         self.res = res
-
-#         # Unpack the optimized network parameters.
-#         for j in range(m):
-#             self.w[j] = res.x[j*H:(j + 1)*H]
-#         self.u = res.x[(m - 1)*H:m*H]
-#         self.v = res.x[m*H:(m + 1)*H]
+        # Unpack the optimized network parameters.
+        for j in range(m):
+            self.w[j] = res.x[j*H:(j + 1)*H]
+        self.u = res.x[m*H:(m + 1)*H]
+        self.v = res.x[(m + 1)*H:(m + 2)*H]
 
 #     def __compute_error(self, p, x):
 #         """Compute the current error in the trained solution."""
@@ -978,13 +979,92 @@ class NNPDE2DIFF(SLFFNN):
 
 #         return E2
 
-#     def __print_progress(self, xk):
-#         """Callback to print progress message from optimizer"""
-#         print('nit =', self.nit)
-#         self.nit += 1
-#         # print('xk =', xk)
-#         # Log the current parameters.
-#         self.phist = np.vstack((self.phist, xk))
+    def _compute_error_debug(self, p, x):
+        """Compute the error function using the current parameter values
+           (debug version)."""
+
+        # Determine the number of training points, independent variables, and
+        # hidden nodes.
+        n = len(x)
+        m = len(self.eq.bc)
+        H = len(self.v)
+
+        # Unpack the network parameters.
+        w = np.zeros((m, H))
+        for j in range(m):
+            w[j] = p[j*H:(j + 1)*H]
+        u = p[m*H:(m + 1)*H]
+        v = p[(m + 1)*H:(m + 2)*H]
+
+        # Compute the forward pass through the network.
+        z = np.zeros((n, H))
+        for i in range(n):
+            for k in range(H):
+                z[i, k] = u[k]
+                for j in range(m):
+                    z[i, k] += w[j, k]*x[i, j]
+
+        s = np.zeros((n, H))
+        for i in range(n):
+            for k in range(H):
+                s[i, k] = sigma.s(z[i, k])
+
+        s1 = np.zeros((n, H))
+        for i in range(n):
+            for k in range(H):
+                s1[i, k] = sigma.s1(s[i, k])
+
+        s2 = np.zeros((n, H))
+        for i in range(n):
+            for k in range(H):
+                s2[i, k] = sigma.s2(s[i, k])
+
+        N = np.zeros(n)
+        for i in range(n):
+            for k in range(H):
+                N[i] += v[k]*s[i, k]
+
+        delN = np.zeros((n, m))
+        for i in range(n):
+            for j in range(m):
+                for k in range(H):
+                    delN[i, j] += v[k]*s1[i, k]*w[j, k]
+
+        del2N = np.zeros((n, m))
+        for i in range(n):
+            for j in range(m):
+                for k in range(H):
+                    del2N[i, j] += v[k]*s2[i, k]*w[j, k]**2
+
+        Yt = np.zeros(n)
+        for i in range(n):
+            Yt[i] = self.tf.Yt(x[i], N[i])
+
+        delYt = np.zeros((n, m))
+        for i in range(n):
+            delYt[i] = self.tf.delYt(x[i], N[i], delN[i])
+
+        del2Yt = np.zeros((n, m))
+        for i in range(n):
+            del2Yt[i] = self.tf.del2Yt(x[i], N[i], delN[i], del2N[i])
+
+        G = np.zeros(n)
+        for i in range(n):
+            G[i] = self.eq.G(x[i], Yt[i], delYt[i], del2Yt[i])
+
+        E2 = 0
+        for i in range(n):
+            E2 += G[i]**2
+
+        return E2
+
+    def _print_progress(self, xk):
+        """Callback to print progress message from optimizer"""
+        print('nit =', self.nit)
+        self.nit += 1
+        # print('xk =', xk)
+        # Log the current parameters.
+        # self.phist = np.vstack((self.phist, xk))
 
 
 # Self-test code
@@ -1009,7 +1089,8 @@ if __name__ == '__main__':
     H = 10
 
     # Test each training algorithm on each equation.
-    for pde in ('eq.diff1d_zero', 'eq.diff1d_half', 'eq.diff1d_one'):
+    # for pde in ('eq.diff1d_zero', 'eq.diff1d_half', 'eq.diff1d_one'):
+    for pde in ('eq.diff1d_halfsine',):
         print('Examining %s.' % pde)
 
         # Read the equation definition.
@@ -1062,7 +1143,7 @@ if __name__ == '__main__':
 
         # for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS',
         #                  'Newton-CG'):
-        for trainalg in ('delta',):
+        for trainalg in ('BFGS',):
             print('Training using %s algorithm.' % trainalg)
 
             # Create and train the neural network.
