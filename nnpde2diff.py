@@ -1006,6 +1006,7 @@ if __name__ == '__main__':
     training_opts['verbose'] = True
     training_opts['eta'] = 0.01
     training_opts['maxepochs'] = 1000
+    H = 10
 
     # Test each training algorithm on each equation.
     for pde in ('eq.diff1d_zero', 'eq.diff1d_half', 'eq.diff1d_one'):
@@ -1065,7 +1066,7 @@ if __name__ == '__main__':
             print('Training using %s algorithm.' % trainalg)
 
             # Create and train the neural network.
-            net = NNPDE2DIFF(eq)
+            net = NNPDE2DIFF(eq, nhid=H)
             np.random.seed(0)
             try:
                 net.train(x_train, trainalg=trainalg, opts=training_opts)
