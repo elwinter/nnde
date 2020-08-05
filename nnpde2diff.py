@@ -39,7 +39,7 @@ from scipy.optimize import minimize
 import sys
 
 from diff1dtrialfunction import Diff1DTrialFunction
-# from diff2dtrialfunction import Diff2DTrialFunction
+from diff2dtrialfunction import Diff2DTrialFunction
 # from diff3dtrialfunction import Diff3DTrialFunction
 from kdelta import kdelta
 from pde2diff import PDE2DIFF
@@ -93,6 +93,9 @@ class NNPDE2DIFF(SLFFNN):
         # Save the differential equation object.
         self.eq = eq
 
+        # Determine the number of dimensions.
+        m = len(eq.bc)
+
         # Initialize all network parameters to 0.
         self.w = np.zeros((m, nhid))
         self.u = np.zeros(nhid)
@@ -101,8 +104,8 @@ class NNPDE2DIFF(SLFFNN):
         # Select the appropriate trial function.
         if m == 2:
             self.tf = Diff1DTrialFunction(eq.bc, eq.delbc, eq.del2bc)
-#         elif m == 3:
-#             self.tf = Diff2DTrialFunction(eq.bcf, eq.delbcf, eq.del2bcf)
+        elif m == 3:
+            self.tf = Diff2DTrialFunction(eq.bc, eq.delbc, eq.del2bc)
 #         elif m == 4:
 #             self.tf = Diff3DTrialFunction(eq.bcf, eq.delbcf, eq.del2bcf)
 #         else:
@@ -172,6 +175,7 @@ class NNPDE2DIFF(SLFFNN):
     def run_debug(self, x):
         """Compute the trained solution (debug version)."""
         n = len(x)
+        m = len(self.eq.bc)
         H = len(self.v)
         w = self.w
         u = self.u
@@ -213,6 +217,7 @@ class NNPDE2DIFF(SLFFNN):
     def run_gradient_debug(self, x):
         """Compute the trained derivative (debug version)."""
         n = len(x)
+        m = len(self.eq.bc)
         H = len(self.v)
         w = self.w
         u = self.u
@@ -288,6 +293,7 @@ class NNPDE2DIFF(SLFFNN):
     def run_laplacian_debug(self, x):
         """Compute the trained derivative (debug version)."""
         n = len(x)
+        m = len(self.eq.bc)
         H = len(self.v)
         w = self.w
         u = self.u
@@ -1387,11 +1393,10 @@ if __name__ == '__main__':
     training_opts['verbose'] = True
     training_opts['eta'] = 0.01
     training_opts['maxepochs'] = 1000
-    training_opts['use_jacobian'] = True
+    training_opts['use_jacobian'] = False
     H = 10
 
     # Test each training algorithm on each equation.
-    # for pde in ('eq.diff1d_zero', 'eq.diff1d_half', 'eq.diff1d_one'):
     for pde in ('eq.diff1d_halfsine',):
         print('Examining %s.' % pde)
 
