@@ -130,8 +130,8 @@ class NNPDE2DIFF(SLFFNN):
             print("Using optimized del2A().")
             self.tf.del2A = self.eq.del2A
 
-#         # Create the parameter history array.
-#         self.phist = np.hstack((self.w.flatten(), self.u, self.v))
+        # Create the parameter history array.
+        self.phist = np.hstack((self.w.flatten(), self.u, self.v))
 
     def train(self, x, trainalg=DEFAULT_TRAINALG, opts=DEFAULT_OPTS):
         """Train the network to solve a 2-D diffusion problem"""
@@ -403,9 +403,10 @@ class NNPDE2DIFF(SLFFNN):
             u -= eta*dE_du
             v -= eta*dE_dv
 
-#             # Log the current parameter values.
-#             self.phist = np.vstack((self.phist,
-#                                     np.hstack((w.flatten(), u, v))))
+            # Log the current parameter values.
+            self.phist = (
+                np.vstack((self.phist, np.hstack((w.flatten(), u, v))))
+            )
 
             # Compute the input, the sigmoid function, and its derivatives,
             # for each hidden node and each training point.
@@ -603,6 +604,11 @@ class NNPDE2DIFF(SLFFNN):
 
             for k in range(H):
                 v[k] -= eta*dE_dv[k]
+
+            # Log the current parameter values.
+            self.phist = (
+                np.vstack((self.phist, np.hstack((w.flatten(), u, v))))
+            )
 
             # Compute the input, the sigmoid function, and its derivatives,
             # for each hidden node and each training point.
@@ -1369,7 +1375,7 @@ class NNPDE2DIFF(SLFFNN):
         self.nit += 1
         # print('xk =', xk)
         # Log the current parameters.
-        # self.phist = np.vstack((self.phist, xk))
+        self.phist = np.vstack((self.phist, xk))
 
 
 if __name__ == '__main__':
