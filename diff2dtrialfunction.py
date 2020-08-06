@@ -217,7 +217,6 @@ class Diff2DTrialFunction(TrialFunction):
         return del2Yt
 
 
-
 if __name__ == '__main__':
     pass
 
