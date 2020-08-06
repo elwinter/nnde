@@ -17,7 +17,7 @@ training_opts['verbose'] = True
 training_opts['eta'] = 0.01
 training_opts['maxepochs'] = 1000
 training_opts['use_jacobian'] = False
-H = 10  # Hidden later nodes
+H = 10  # Hidden layer nodes
 
 pde = 'eq.diff1d_halfsine'
 print('Examining %s.' % pde)
