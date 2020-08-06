@@ -935,11 +935,6 @@ class NNPDE2DIFF(SLFFNN):
             jac = self._compute_error_jacobian_debug
 
         # Minimize the error function to get the new parameter values.
-        # if trainalg in ('Nelder-Mead', 'Powell', 'CG', 'BFGS'):
-        #     jac = None
-        # elif trainalg in ('Newton-CG',):
-        #     jac = self.__compute_error_gradient
-        print('jac =', jac)
         res = minimize(self._compute_error_debug, p, method=trainalg,
                        jac=jac, args=(x), callback=callback)
         self.res = res
