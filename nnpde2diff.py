@@ -146,31 +146,31 @@ class NNPDE2DIFF(SLFFNN):
             print('ERROR: Invalid training algorithm (%s)!' % trainalg)
             exit(1)
 
-#     def run(self, x):
-#         """Compute the trained solution."""
+    def run(self, x):
+        """Compute the trained solution."""
 
-#         # Get references to the network parameters for convenience.
-#         w = self.w
-#         u = self.u
-#         v = self.v
+        # Get references to the network parameters for convenience.
+        w = self.w
+        u = self.u
+        v = self.v
 
-#         # Compute the activation for each input point and hidden node.
-#         z = np.dot(x, w) + u
+        # Compute the activation for each input point and hidden node.
+        z = np.dot(x, w) + u
 
-#         # Compute the sigma function for each input point and hidden node.
-#         s = sigma_v(z)
+        # Compute the sigma function for each input point and hidden node.
+        s = s_v(z)
 
-#         # Compute the network output for each input point.
-#         N = np.dot(s, v)
+        # Compute the network output for each input point.
+        N = np.dot(s, v)
 
-#         # Compute the value of the trial function for each input point.
-#         n = len(x)
-#         Yt = np.zeros(n)
-#         for i in range(n):
-#             Yt[i] = self.tf.Ytf(x[i], N[i])
+        # Compute the value of the trial function for each input point.
+        n = len(x)
+        Yt = np.zeros(n)
+        for i in range(n):
+            Yt[i] = self.tf.Yt(x[i], N[i])
 
-#         # Return the trial function values for each input point.
-#         return Yt
+        # Return the trial function values for each input point.
+        return Yt
 
     def run_debug(self, x):
         """Compute the trained solution (debug version)."""
@@ -257,38 +257,38 @@ class NNPDE2DIFF(SLFFNN):
 
         return delYt
 
-#     def run_laplacian(self, x):
-#         """Compute the trained Laplacian."""
+    def run_laplacian(self, x):
+        """Compute the trained Laplacian."""
 
-#         # Fetch the number n of input points at which to calculate the
-#         # output, and the number m of components of each point.
-#         n = len(x)
-#         m = len(x[0])
+        # Fetch the number n of input points at which to calculate the
+        # output, and the number m of components of each point.
+        n = len(x)
+        m = len(x[0])
 
-#         # Get references to the network parameters for convenience.
-#         w = self.w
-#         u = self.u
-#         v = self.v
+        # Get references to the network parameters for convenience.
+        w = self.w
+        u = self.u
+        v = self.v
 
-#         # Compute the net input, the sigmoid function and its
-#         # derivatives, for each hidden node and each training point.
-#         z = x.dot(w) + u
-#         s = sigma_v(z)
-#         s1 = dsigma_dz_v(z)
-#         s2 = d2sigma_dz2_v(z)
+        # Compute the net input, the sigmoid function and its
+        # derivatives, for each hidden node and each training point.
+        z = x.dot(w) + u
+        s = s_v(z)
+        s1 = s1_v(s)
+        s2 = s2_v(s)
 
-#         # Compute the network output and its derivatives, for each
-#         # training point.
-#         N = s.dot(v)
-#         delN = s1.dot((w*v).T)
-#         del2N = s2.dot((w**2*v).T)
+        # Compute the network output and its derivatives, for each
+        # training point.
+        N = s.dot(v)
+        delN = s1.dot((w*v).T)
+        del2N = s2.dot((w**2*v).T)
 
-#         # Compute the Laplacian components for the trial function.
-#         del2Yt = np.zeros((n, m))
-#         for i in range(n):
-#             del2Yt[i] = self.tf.del2Ytf(x[i], N[i], delN[i], del2N[i])
+        # Compute the Laplacian components for the trial function.
+        del2Yt = np.zeros((n, m))
+        for i in range(n):
+            del2Yt[i] = self.tf.del2Yt(x[i], N[i], delN[i], del2N[i])
 
-#         return del2Yt
+        return del2Yt
 
     def run_laplacian_debug(self, x):
         """Compute the trained derivative (debug version)."""
@@ -1470,7 +1470,7 @@ if __name__ == '__main__':
             print('The trained network is:')
             print(net)
 
-            Yt = net.run_debug(x_train)
+            Yt = net.run(x_train)
             print('The trained solution is:')
             print('Yt =', Yt)
 
@@ -1488,7 +1488,7 @@ if __name__ == '__main__':
                 print('The error in the trained gradient is:')
                 print('delYt_err =', delYt_err)
 
-            del2Yt = net.run_laplacian_debug(x_train)
+            del2Yt = net.run_laplacian(x_train)
             print('The trained Laplacian is:')
             print('del2Yt =', del2Yt)
 
