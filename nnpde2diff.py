@@ -950,47 +950,47 @@ class NNPDE2DIFF(SLFFNN):
         self.u = res.x[m*H:(m + 1)*H]
         self.v = res.x[(m + 1)*H:(m + 2)*H]
 
-#     def __compute_error(self, p, x):
-#         """Compute the current error in the trained solution."""
+    def __compute_error(self, p, x):
+        """Compute the current error in the trained solution."""
 
-#         # Unpack the network parameters.
-#         n = len(x)
-#         m = len(x[0])
-#         H = int(len(p)/(m + 2))
-#         w = np.zeros((m, H))
-#         for j in range(m):
-#             w[j] = p[j*H:(j + 1)*H]
-#         u = p[(m - 1)*H:m*H]
-#         v = p[m*H:(m + 1)*H]
+        # Unpack the network parameters.
+        n = len(x)
+        m = len(x[0])
+        H = int(len(p)/(m + 2))
+        w = np.zeros((m, H))
+        for j in range(m):
+            w[j] = p[j*H:(j + 1)*H]
+        u = p[(m - 1)*H:m*H]
+        v = p[m*H:(m + 1)*H]
 
-#         # Weighted inputs and transfer functions and derivatives.
-#         z = x.dot(w) + u
-#         s = sigma_v(z)
-#         s1 = dsigma_dz_v(z)
-#         s2 = d2sigma_dz2_v(z)
+        # Weighted inputs and transfer functions and derivatives.
+        z = x.dot(w) + u
+        s = s_v(z)
+        s1 = s1_v(s)
+        s2 = s2_v(s)
 
-#         # Network output and derivatives.
-#         N = s.dot(v)
-#         delN = s1.dot((w*v).T)
-#         del2N = s2.dot((w**2*v).T)
+        # Network output and derivatives.
+        N = s.dot(v)
+        delN = s1.dot((w*v).T)
+        del2N = s2.dot((w**2*v).T)
 
-#         # Trial function and derivatives
-#         Yt = np.zeros(n)
-#         delYt = np.zeros((n, m))
-#         del2Yt = np.zeros((n, m))
-#         for i in range(n):
-#             Yt[i] = self.tf.Ytf(x[i], N[i])
-#             delYt[i] = self.tf.delYtf(x[i], N[i], delN[i])
-#             del2Yt[i] = self.tf.del2Ytf(x[i], N[i], delN[i], del2N[i])
+        # Trial function and derivatives
+        Yt = np.zeros(n)
+        delYt = np.zeros((n, m))
+        del2Yt = np.zeros((n, m))
+        for i in range(n):
+            Yt[i] = self.tf.Yt(x[i], N[i])
+            delYt[i] = self.tf.delYt(x[i], N[i], delN[i])
+            del2Yt[i] = self.tf.del2Yt(x[i], N[i], delN[i], del2N[i])
 
-#         # Differential equation
-#         G = np.zeros(n)
-#         for i in range(n):
-#             G[i] = self.eq.Gf(x[i], Yt[i], delYt[i], del2Yt[i])
+        # Differential equation
+        G = np.zeros(n)
+        for i in range(n):
+            G[i] = self.eq.G(x[i], Yt[i], delYt[i], del2Yt[i])
 
-#         E2 = np.sum(G**2)
+        E2 = np.sum(G**2)
 
-#         return E2
+        return E2
 
     def _compute_error_debug(self, p, x):
         """Compute the error function using the current parameter values
@@ -1451,7 +1451,7 @@ if __name__ == '__main__':
 
         # for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS',
         #                  'Newton-CG'):
-        for trainalg in ('delta',):
+        for trainalg in ('BFGS',):
             print('Training using %s algorithm.' % trainalg)
 
             # Create and train the neural network.
