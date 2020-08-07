@@ -1,20 +1,22 @@
 """
-This module implements a 2-D diffusion PDE
+This module implements a 2-D diffusion PDE.
 
 Note that an upper-case 'Y' is used to represent the Greek psi, which
 represents the problem solution Y(x, y, t).
 
-The equation is defined on the domain (x, y, t) in [[0,1],[0,]].
+The equation is defined on the domain (x, y, t) in
+([0, 1], [0, 1], [0, inf]).
 
 The analytical form of the equation is:
 
-  G((x_, y, t), Y, delY, del2Y) = dY_dt - D*(d2Y_dx2 + d2Y_dy2) = 0
+  G([x, y, t], Y, delY, del2Y) = dY_dt - D*(d2Y_dx2 + d2Y_dy2) = 0
 
 where:
 
-x_ is the vector (x, y, t)
+x, y, t are the independent variables
 delY is the vector (dY/dx, dY/dy, dY/dt)
 del2Y is the vector (d2Y/dx2, d2Y_dy2, d2Y/dt2)
+D is the diffusion coefficient
 
 With boundary conditions:
 
@@ -35,7 +37,7 @@ Todo:
 """
 
 
-from math import exp, cos, pi, sin
+from math import cos, exp, pi, sin
 import numpy as np
 
 
@@ -361,7 +363,6 @@ del2Ya = [d2Ya_dx2, d2Ya_dy2, d2Ya_dt2]
 
 
 if __name__ == '__main__':
-    pass
 
     # Test values
     x_test = (0.4, 0.5, 0.6)
