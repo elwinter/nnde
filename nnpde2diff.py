@@ -40,7 +40,7 @@ import sys
 
 from diff1dtrialfunction import Diff1DTrialFunction
 from diff2dtrialfunction import Diff2DTrialFunction
-# from diff3dtrialfunction import Diff3DTrialFunction
+from diff3dtrialfunction import Diff3DTrialFunction
 from kdelta import kdelta
 from pde2diff import PDE2DIFF
 import sigma
@@ -106,11 +106,11 @@ class NNPDE2DIFF(SLFFNN):
             self.tf = Diff1DTrialFunction(eq.bc, eq.delbc, eq.del2bc)
         elif m == 3:
             self.tf = Diff2DTrialFunction(eq.bc, eq.delbc, eq.del2bc)
-#         elif m == 4:
-#             self.tf = Diff3DTrialFunction(eq.bcf, eq.delbcf, eq.del2bcf)
-#         else:
-#             print("Unexpected problem dimensionality: %s!", m)
-#             exit(1)
+        elif m == 4:
+            self.tf = Diff3DTrialFunction(eq.bc, eq.delbc, eq.del2bc)
+        else:
+            print("Unexpected problem dimensionality: %s!", m)
+            exit(1)
 
         # Clear the result structure for minimize() calls.
         self.res = None
@@ -1376,10 +1376,10 @@ class NNPDE2DIFF(SLFFNN):
 if __name__ == '__main__':
 
     # Create training data.
-    nx = 10
-    ny = 10
-    nz = 10
-    nt = 10
+    nx = 5
+    ny = 5
+    nz = 5
+    nt = 5
     xt_train = np.array(create_training_grid([nx, nt]))
     xyt_train = np.array(create_training_grid([nx, ny, nt]))
     xyzt_train = np.array(create_training_grid([nx, ny, nz, nt]))
@@ -1388,13 +1388,14 @@ if __name__ == '__main__':
     training_opts = {}
     training_opts['debug'] = False
     training_opts['verbose'] = True
-    training_opts['eta'] = 0.01
+    training_opts['eta'] = 0.1
     training_opts['maxepochs'] = 1000
     training_opts['use_jacobian'] = False
     H = 10
 
     # Test each training algorithm on each equation.
-    for pde in ('eq.diff1d_halfsine',):
+    for pde in ('eq.diff1d_halfsine', 'eq.diff2d_halfsine',
+                'eq.diff3d_halfsine'):
         print('Examining %s.' % pde)
 
         # Read the equation definition.
