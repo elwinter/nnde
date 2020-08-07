@@ -605,11 +605,6 @@ class NNPDE2DIFF(SLFFNN):
             for k in range(H):
                 v[k] -= eta*dE_dv[k]
 
-            # Log the current parameter values.
-            self.phist = (
-                np.vstack((self.phist, np.hstack((w.flatten(), u, v))))
-            )
-
             # Compute the input, the sigmoid function, and its derivatives,
             # for each hidden node and each training point.
             z = np.zeros((n, H))
