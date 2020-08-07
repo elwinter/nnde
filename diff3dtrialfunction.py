@@ -349,13 +349,13 @@ class Diff3DTrialFunction(TrialFunction):
         del2A = [d2A_dx2, d2A_dy2, d2A_dz2, d2A_dt2]
         return del2A
 
-    def Pf(self, xyzt):
+    def P(self, xyzt):
         """Network coefficient function for 3D diffusion problems"""
         (x, y, z, t) = xyzt
         P = x*(1 - x)*y*(1 - y)*z*(1 - z)*t
         return P
 
-    def delPf(self, xyzt):
+    def delP(self, xyzt):
         """Network coefficient function gradient"""
         (x, y, z, t) = xyzt
         dP_dx = (1 - 2*x)*y*(1 - y)*z*(1 - z)*t
@@ -365,7 +365,7 @@ class Diff3DTrialFunction(TrialFunction):
         delP = [dP_dx, dP_dy, dP_dz, dP_dt]
         return delP
 
-    def del2Pf(self, xyzt):
+    def del2P(self, xyzt):
         """Network coefficient function Laplacian"""
         (x, y, z, t) = xyzt
         d2P_dx2 = -2*y*(1 - y)*z*(1 - z)*t
@@ -375,20 +375,20 @@ class Diff3DTrialFunction(TrialFunction):
         del2P = [d2P_dx2, d2P_dy2, d2P_dz2, d2P_dt2]
         return del2P
 
-    def Ytf(self, xyzt, N):
+    def Yt(self, xyzt, N):
         """Trial function"""
         A = self.A(xyzt)
-        P = self.Pf(xyzt)
+        P = self.P(xyzt)
         Yt = A + P*N
         return Yt
 
-    def delYtf(self, xyzt, N, delN):
+    def delYt(self, xyzt, N, delN):
         """Trial function gradient"""
         (x, y, z, t) = xyzt
         (dN_dx, dN_dy, dN_dz, dN_dt) = delN
         (dA_dx, dA_dy, dA_dz, dA_dt) = self.delA(xyzt)
-        P = self.Pf(xyzt)
-        (dP_dx, dP_dy, dP_dz, dP_dt) = self.delPf(xyzt)
+        P = self.P(xyzt)
+        (dP_dx, dP_dy, dP_dz, dP_dt) = self.delP(xyzt)
         dYt_dx = dA_dx + P*dN_dx + dP_dx*N
         dYt_dy = dA_dy + P*dN_dy + dP_dy*N
         dYt_dz = dA_dz + P*dN_dz + dP_dz*N
@@ -396,15 +396,15 @@ class Diff3DTrialFunction(TrialFunction):
         delYt = [dYt_dx, dYt_dy, dYt_dz, dYt_dt]
         return delYt
 
-    def del2Ytf(self, xyzt, N, delN, del2N):
+    def del2Yt(self, xyzt, N, delN, del2N):
         """Trial function Laplacian"""
         (x, y, z, t) = xyzt
         (dN_dx, dN_dy, dN_dz, dN_dt) = delN
         (d2N_dx2, d2N_dy2, d2N_dz2, d2N_dt2) = del2N
         (d2A_dx2, d2A_dy2, d2A_dz2, d2A_dt2) = self.del2A(xyzt)
-        P = self.Pf(xyzt)
-        (dP_dx, dP_dy, dP_dz, dP_dt) = self.delPf(xyzt)
-        (d2P_dx2, d2P_dy2, d2P_dz2, d2P_dt2) = self.del2Pf(xyzt)
+        P = self.P(xyzt)
+        (dP_dx, dP_dy, dP_dz, dP_dt) = self.delP(xyzt)
+        (d2P_dx2, d2P_dy2, d2P_dz2, d2P_dt2) = self.del2P(xyzt)
         d2Yt_dx2 = d2A_dx2 + P*d2N_dx2 + 2*dP_dx*dN_dx + d2P_dx2*N
         d2Yt_dy2 = d2A_dy2 + P*d2N_dy2 + 2*dP_dy*dN_dy + d2P_dy2*N
         d2Yt_dz2 = d2A_dz2 + P*d2N_dz2 + 2*dP_dz*dN_dz + d2P_dz2*N
@@ -414,6 +414,9 @@ class Diff3DTrialFunction(TrialFunction):
 
 
 if __name__ == '__main__':
+
+    # This is a 4-D problem.
+    m = 4
 
     # Test boundary conditions
     bc = [[lambda xyzt: 0, lambda xyzt: 0],
@@ -463,91 +466,68 @@ if __name__ == '__main__':
                 lambda xyzt: 0],
                [None, None, None, None]]]
 
-    # Reference values for tests.
-    bc_ref = [[0, 0],
-              [0, 0],
-              [0, 0],
-              [0.294867, None]]
-    delbc_ref = [[[0, 0, 0, 0], [0, 0, 0, 0]],
-                 [[0, 0, 0, 0], [0, 0, 0, 0]],
-                 [[0, 0, 0, 0], [0, 0, 0, 0]],
-                 [[0.30099, 0.26913, 0.237847, 0], [None, None, None, None]]]
-    del2bc_ref = [[[0, 0, 0, 0], [0, 0, 0, 0]],
-                  [[0, 0, 0, 0], [0, 0, 0, 0]],
-                  [[0, 0, 0, 0], [0, 0, 0, 0]],
-                  [[-2.91022, -2.91022, -2.91022, 0],
-                   [None, None, None, None]]]
-    A_ref = 0.168074
-    delA_ref = [0.171564, 0.153404, 0.135573, -0.294867]
-    del2A_ref = [-1.65883, -1.65883, -1.65883, 0]
-    P_ref = 0.00608125
-    delP_ref = [0.00506771, 0.00452511, 0.00399425, 0.0141424]
-    del2P_ref = [-0.0506771, -0.050279, -0.0499282, 0]
-    Yt_ref = 0.171115
-    delYt_ref = [0.177808, 0.159437, 0.141401, -0.283904]
-    del2Yt_ref = [-1.67366, -1.67398, -1.67432, 0.0226025]
-
-    # Additional test variables.
+    # Test inputs
+    xyzt_test = [0.4, 0.41, 0.42, 0.43]
     N_test = 0.5
     delN_test = [0.61, 0.62, 0.63, 0.64]
     del2N_test = [0.71, 0.72, 0.73, 0.74]
 
-    # Test all functions near the center of the domain.
-    xyzt_test = [0.4, 0.41, 0.42, 0.43]
+    # Reference values for tests.
+    A_ref = 0.168074
+    delA_ref = (0.171564, 0.153404, 0.135573, -0.294867)
+    del2A_ref = (-1.65883, -1.65883, -1.65883, 0)
+    P_ref = 0.00608125
+    delP_ref = (0.00506771, 0.00452511, 0.00399425, 0.0141424)
+    del2P_ref = (-0.0506771, -0.050279, -0.0499282, 0)
+    Yt_ref = 0.171115
+    delYt_ref = (0.177808, 0.159437, 0.141401, -0.283904)
+    del2Yt_ref = (-1.67366, -1.67398, -1.67432, 0.0226025)
 
     # Create a new trial function object.
     tf = Diff3DTrialFunction(bc, delbc, del2bc)
 
     print("Testing boundary condition function.")
-    A_test = tf.A(xyzt_test)
-    if not np.isclose(A_test, A_ref):
-        print("ERROR: A = %s, vs ref %s" % (A_test, A_ref))
+    A = tf.A(xyzt_test)
+    assert np.isclose(A, A_ref)
+
+    print('Verifying boundary condition function reduces to boundary'
+          ' conditions at boundaries.')
+    print('TO DO!')
 
     print("Testing boundary condition function gradient.")
-    delA_test = tf.delA(xyzt_test)
-    for (i, delA_t) in enumerate(delA_test):
-        if not np.isclose(delA_t, delA_ref[i]):
-            print("ERROR: delA[%d] = %s, vs ref %s" % (i, delA_t, delA_ref[i]))
+    delA = tf.delA(xyzt_test)
+    for j in range(m):
+        assert np.isclose(delA[j], delA_ref[j])
 
     print("Testing boundary condition function Laplacian.")
-    del2A_test = tf.del2A(xyzt_test)
-    for (i, del2A_t) in enumerate(del2A_test):
-        if not np.isclose(del2A_t, del2A_ref[i]):
-            print("ERROR: del2A[%d] = %s, vs ref %s" %
-                  (i, del2A_t, del2A_ref[i]))
+    del2A = tf.del2A(xyzt_test)
+    for j in range(m):
+        assert np.isclose(del2A[j], del2A_ref[j])
 
     print("Testing network coefficient function.")
-    P_test = tf.Pf(xyzt_test)
-    if not np.isclose(P_test, P_ref):
-        print("ERROR: P = %s, vs ref %s" % (P_test, P_ref))
+    P = tf.P(xyzt_test)
+    assert np.isclose(P, P_ref)
 
     print("Testing network coefficient function gradient.")
-    delP_test = tf.delPf(xyzt_test)
-    for (i, delP_t) in enumerate(delP_test):
-        if not np.isclose(delP_t, delP_ref[i]):
-            print("ERROR: delP[%d] = %s, vs ref %s" % (delP_t, delP_ref[i]))
+    delP = tf.delP(xyzt_test)
+    for j in range(m):
+        assert np.isclose(delP[j], delP_ref[j])
 
     print("Testing network coefficient function Laplacian.")
-    del2P_test = tf.del2Pf(xyzt_test)
-    for (i, del2P_t) in enumerate(del2P_test):
-        if not np.isclose(del2P_t, del2P_ref[i]):
-            print("ERROR: del2P[%d] = %s, vs ref %s" % (del2P_t, del2P_ref[i]))
+    del2P = tf.del2P(xyzt_test)
+    for j in range(m):
+        assert np.isclose(del2P[j], del2P_ref[j])
 
     print("Testing trial function.")
-    Yt_test = tf.Ytf(xyzt_test, N_test)
-    if not np.isclose(Yt_test, Yt_ref):
-        print("ERROR: Yt = %s, vs ref %s" % (Yt_test, Yt_ref))
+    Yt = tf.Yt(xyzt_test, N_test)
+    assert np.isclose(Yt, Yt_ref)
 
     print("Testing trial function gradient.")
-    delYt_test = tf.delYtf(xyzt_test, N_test, delN_test)
-    for (i, delYt_t) in enumerate(delYt_test):
-        if not np.isclose(delYt_t, delYt_ref[i]):
-            print("ERROR: delYt[%d] = %s, vs ref %s"
-                  % (i, delYt_t, delYt_ref[i]))
+    delYt = tf.delYt(xyzt_test, N_test, delN_test)
+    for j in range(m):
+        assert np.isclose(delYt[j], delYt_ref[j])
 
     print("Testing trial function Laplacian.")
-    del2Yt_test = tf.del2Ytf(xyzt_test, N_test, delN_test, del2N_test)
-    for (i, del2Yt_t) in enumerate(del2Yt_test):
-        if not np.isclose(del2Yt_t, del2Yt_ref[i]):
-            print("ERROR: del2Yt[%d] = %s, vs ref %s"
-                  % (i, del2Yt_t, del2Yt_ref[i]))
+    del2Yt = tf.del2Yt(xyzt_test, N_test, delN_test, del2N_test)
+    for j in range(m):
+        assert np.isclose(del2Yt[j], del2Yt_ref[j])
