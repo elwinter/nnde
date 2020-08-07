@@ -218,7 +218,6 @@ class Diff2DTrialFunction(TrialFunction):
 
 
 if __name__ == '__main__':
-    pass
 
     # This is a 3-D problem.
     m = 3
