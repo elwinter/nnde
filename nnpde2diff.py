@@ -1391,11 +1391,10 @@ if __name__ == '__main__':
     training_opts['eta'] = 0.1
     training_opts['maxepochs'] = 1000
     training_opts['use_jacobian'] = False
-    H = 10
+    H = 5
 
     # Test each training algorithm on each equation.
-    for pde in ('eq.diff1d_halfsine', 'eq.diff2d_halfsine',
-                'eq.diff3d_halfsine'):
+    for pde in ('eq.diff1d_halfsine',):
         print('Examining %s.' % pde)
 
         # Read the equation definition.
@@ -1448,7 +1447,7 @@ if __name__ == '__main__':
 
         # for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS',
         #                  'Newton-CG'):
-        for trainalg in ('BFGS',):
+        for trainalg in ('delta',):
             print('Training using %s algorithm.' % trainalg)
 
             # Create and train the neural network.
@@ -1475,6 +1474,7 @@ if __name__ == '__main__':
                 Yt_err = Yt - Ya
                 print('The error in the trained solution is:')
                 print('Yt_err =', Yt_err)
+                Yt_rmserr = sqrt(np.sum(Yt_err**2)/n)
 
             delYt = net.run_gradient_debug(x_train)
             print('The trained gradient is:')
@@ -1484,6 +1484,7 @@ if __name__ == '__main__':
                 delYt_err = delYt - delYa
                 print('The error in the trained gradient is:')
                 print('delYt_err =', delYt_err)
+                delYt_rmserr = sqrt(np.sum(delYt_err**2)/(n*m))
 
             del2Yt = net.run_laplacian(x_train)
             print('The trained Laplacian is:')
@@ -1493,3 +1494,11 @@ if __name__ == '__main__':
                 del2Yt_err = del2Yt - del2Ya
                 print('The error in the trained Laplacian is:')
                 print('del2Yt_err =', del2Yt_err)
+                del2Yt_rmserr = sqrt(np.sum(del2Yt_err**2)/(n*m))
+
+            if eq.Ya:
+                print("RMS error for trained solution is %s." % Yt_rmserr)
+            if eq.delYa:
+                print("RMS error for trained gradient is %s." % delYt_rmserr)
+            if eq.del2Ya:
+                print("RMS error for trained Laplacian is %s." % del2Yt_rmserr)
