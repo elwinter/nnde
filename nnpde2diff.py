@@ -1502,3 +1502,6 @@ if __name__ == '__main__':
                 print("RMS error for trained gradient is %s." % delYt_rmserr)
             if eq.del2Ya:
                 print("RMS error for trained Laplacian is %s." % del2Yt_rmserr)
+
+            # Summary report
+            print(nx, nt, H, Yt_rmserr, delYt_rmserr, del2Yt_rmserr)
