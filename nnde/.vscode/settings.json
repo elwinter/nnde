@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": "/Users/ewinter/anaconda3/envs/research/bin/python",
+    "python.linting.pylintEnabled": false,
+    "python.linting.pycodestyleEnabled": true,
+    "python.linting.enabled": true
+}
