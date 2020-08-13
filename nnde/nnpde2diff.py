@@ -382,6 +382,9 @@ class NNPDE2DIFF(SLFFNN):
         w = np.random.uniform(wmin, wmax, (m, H))
         u = np.random.uniform(umin, umax, H)
         v = np.random.uniform(vmin, vmax, H)
+        # w = np.zeros((m, H))
+        # u = np.zeros(H)
+        # v = np.zeros(H)
 
         # Initial parameter deltas are 0.
         dE_dw = np.zeros((m, H))
@@ -583,6 +586,9 @@ class NNPDE2DIFF(SLFFNN):
         w = np.random.uniform(wmin, wmax, (m, H))
         u = np.random.uniform(umin, umax, H)
         v = np.random.uniform(vmin, vmax, H)
+        # w = np.zeros((m, H))
+        # u = np.zeros(H)
+        # v = np.zeros(H)
 
         # Initial parameter deltas are 0.
         dE_dw = np.zeros((m, H))
@@ -920,6 +926,9 @@ class NNPDE2DIFF(SLFFNN):
         self.w = np.random.uniform(my_opts['wmin'], my_opts['wmax'], (m, H))
         self.u = np.random.uniform(my_opts['umin'], my_opts['umax'], H)
         self.v = np.random.uniform(my_opts['vmin'], my_opts['vmax'], H)
+        # self.w = np.zeros((m, H))
+        # self.u = np.zeros(H)
+        # self.v = np.zeros(H)
 
         # Assemble the network parameters into a single 1-D vector for
         # use by the minimize() method.
