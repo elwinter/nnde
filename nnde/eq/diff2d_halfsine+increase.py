@@ -296,6 +296,7 @@ def A(xyt):
     A = (a*t*x + (1 - t)*sin(pi*x))*sin(pi*y)
     return A
 
+
 def delA(xyt):
     """Optimized version of boundary condition function gradient"""
     (x, y, t) = xyt
@@ -303,6 +304,7 @@ def delA(xyt):
     dA_dy = pi*cos(pi*y)*(a*t*x + (1 - t)*sin(pi*x))
     dA_dt = (a*x - sin(pi*x))*sin(pi*y)
     return [dA_dx, dA_dy, dA_dt]
+
 
 def del2A(xyt):
     """Optimized version of boundary condition function Laplacian"""
@@ -332,7 +334,8 @@ if __name__ == '__main__':
                  ((0.970805519362733, 0, 0), (None, None, None)))
     del2bc_ref = (((0, 0, 0), (0, -5.921762640653615, 0)),
                   ((0, 0, 0), (0, 0, 0)),
-                  ((-9.38655157891136, -9.38655157891136, 0), (None, None, None)))
+                  ((-9.38655157891136, -9.38655157891136, 0),
+                   (None, None, None)))
     dG_dY_ref = 0
     dG_ddelY_ref = (0, 0, 1)
     dG_ddel2Y_ref = (-D, -D, 0)
