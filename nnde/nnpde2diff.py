@@ -1403,7 +1403,7 @@ if __name__ == '__main__':
     H = 5
 
     # Test each training algorithm on each equation.
-    for pde in ('eq.diff1d_halfsine+increase',):
+    for pde in ('eq.diff2d_halfsine+increase',):
         print('Examining %s.' % pde)
 
         # Read the equation definition.
@@ -1456,7 +1456,7 @@ if __name__ == '__main__':
 
         # for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS',
         #                  'Newton-CG'):
-        for trainalg in ('BFGS',):
+        for trainalg in ('delta',):
             print('Training using %s algorithm.' % trainalg)
 
             # Create and train the neural network.
@@ -1479,6 +1479,7 @@ if __name__ == '__main__':
             print('The trained solution is:')
             print('Yt =', Yt)
 
+            Yt_rmserr = None
             if eq.Ya:
                 Yt_err = Yt - Ya
                 print('The error in the trained solution is:')
@@ -1489,6 +1490,7 @@ if __name__ == '__main__':
             print('The trained gradient is:')
             print('delYt =', delYt)
 
+            delYt_rmserr = None
             if eq.delYa:
                 delYt_err = delYt - delYa
                 print('The error in the trained gradient is:')
@@ -1499,6 +1501,7 @@ if __name__ == '__main__':
             print('The trained Laplacian is:')
             print('del2Yt =', del2Yt)
 
+            del2Yt_rmserr = None
             if eq.del2Ya:
                 del2Yt_err = del2Yt - del2Ya
                 print('The error in the trained Laplacian is:')
@@ -1513,4 +1516,5 @@ if __name__ == '__main__':
                 print("RMS error for trained Laplacian is %s." % del2Yt_rmserr)
 
             # Summary report
-            print(nx, nt, H, Yt_rmserr, delYt_rmserr, del2Yt_rmserr)
+            if Yt_rmserr and delYt_rmserr and del2Yt_rmserr:
+                print(nx, nt, H, Yt_rmserr, delYt_rmserr, del2Yt_rmserr)
