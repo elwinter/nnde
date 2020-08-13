@@ -69,12 +69,18 @@ class PDE2DIFF(PDE2):
             self.dG_ddelY = pdemod.dG_ddelY
             assert pdemod.dG_ddel2Y
             self.dG_ddel2Y = pdemod.dG_ddel2Y
-            self.A = pdemod.A or None
-            self.delA = pdemod.delA or None
-            self.del2A = pdemod.del2A or None
-            self.Ya = pdemod.Ya or None
-            self.delYa = pdemod.delYa or None
-            self.del2Ya = pdemod.del2Ya or None
+            if hasattr(pdemod, 'A'):
+                self.A = pdemod.A
+            if hasattr(pdemod, 'delA'):
+                self.delA = pdemod.delA
+            if hasattr(pdemod, 'del2A'):
+                self.del2A = pdemod.del2A
+            if hasattr(pdemod, 'Ya'):
+                self.Ya = pdemod.Ya
+            if hasattr(pdemod, 'delYa'):
+                self.delYa = pdemod.delYa
+            if hasattr(pdemod, 'del2Ya'):
+                self.del2Ya = pdemod.del2Ya
 
 
 if __name__ == '__main__':
