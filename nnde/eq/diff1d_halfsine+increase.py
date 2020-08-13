@@ -4,15 +4,15 @@ This module implements a 1-D diffusion PDE
 Note that an upper-case 'Y' is used to represent the Greek psi, which
 represents the problem solution Y(x,t).
 
-The equation is defined on the domain (x,t) in [[0,1],[0,]].
+The equation is defined on the domain (x, t) in [[0, 1],[0, ]].
 
 The analytical form of the equation is:
 
-  G(x, Y, delY, del2Y) = dY_dt - D*d2Y_dx2 = 0
+  G([x, t], Y, delY, del2Y) = dY_dt - D*d2Y_dx2 = 0
 
 where:
 
-xv is the vector (x,t)
+[x, t] are the independent variables.
 delY is the vector (dY/dx, dY/dt)
 del2Y is the vector (d2Y/dx2, d2Y/dt2)
 
@@ -361,6 +361,6 @@ if __name__ == '__main__':
     for j in range(m):
         assert np.isclose(delYa[j](x_test), delYa_ref[j])
 
-#     print("Testing analytical solution Laplacian.")
-#     for j in range(m):
-#         assert np.isclose(del2Ya[j](x_test), del2Ya_ref[j])
+    print("Testing analytical solution Laplacian.")
+    for j in range(m):
+        assert np.isclose(del2Ya[j](x_test), del2Ya_ref[j])
