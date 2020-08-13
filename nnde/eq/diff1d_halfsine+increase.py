@@ -310,16 +310,16 @@ if __name__ == '__main__':
 
     print('Testing boundary condition gradients.')
     for j in range(m):
-        for jj in range(m):
-            for jjj in range(2):
+        for jj in range(2):
+            for jjj in range(m):
                 if delbc[j][jj][jjj] is not None:
                     assert np.isclose(delbc[j][jj][jjj](x_test),
                                       delbc_ref[j][jj][jjj])
 
     print('Testing boundary condition Laplacians.')
     for j in range(m):
-        for jj in range(m):
-            for jjj in range(2):
+        for jj in range(2):
+            for jjj in range(m):
                 if del2bc[j][jj][jjj] is not None:
                     assert np.isclose(del2bc[j][jj][jjj](x_test),
                                       del2bc_ref[j][jj][jjj])
