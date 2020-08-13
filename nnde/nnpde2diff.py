@@ -395,7 +395,7 @@ class NNPDE2DIFF(SLFFNN):
 
         # Train the network for the specified number of epochs.
         for epoch in range(maxepochs):
-            if verbose:
+            if debug:
                 print('Starting epoch %d.' % epoch)
 
             # Compute the new values of the network parameters.
@@ -917,9 +917,9 @@ class NNPDE2DIFF(SLFFNN):
         H = len(self.v)
 
         # Create the hidden node weights, biases, and output node weights.
-        w = np.random.uniform(my_opts['wmin'], my_opts['wmax'], (m, H))
-        u = np.random.uniform(my_opts['umin'], my_opts['umax'], H)
-        v = np.random.uniform(my_opts['vmin'], my_opts['vmax'], H)
+        self.w = np.random.uniform(my_opts['wmin'], my_opts['wmax'], (m, H))
+        self.u = np.random.uniform(my_opts['umin'], my_opts['umax'], H)
+        self.v = np.random.uniform(my_opts['vmin'], my_opts['vmax'], H)
 
         # Assemble the network parameters into a single 1-D vector for
         # use by the minimize() method.
@@ -1394,7 +1394,7 @@ if __name__ == '__main__':
     H = 5
 
     # Test each training algorithm on each equation.
-    for pde in ('eq.diff1d_halfsine',):
+    for pde in ('eq.diff1d_halfsine+increase',):
         print('Examining %s.' % pde)
 
         # Read the equation definition.
@@ -1447,7 +1447,7 @@ if __name__ == '__main__':
 
         # for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS',
         #                  'Newton-CG'):
-        for trainalg in ('delta',):
+        for trainalg in ('BFGS',):
             print('Training using %s algorithm.' % trainalg)
 
             # Create and train the neural network.
