@@ -24,6 +24,11 @@ Todo:
 """
 
 
+__all__ = []
+__version__ = '0.0'
+__author__ = 'Eric Winter (ewinter@stsci.edu)'
+
+
 class TrialFunction():
     """Trial function base class"""
 

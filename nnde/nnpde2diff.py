@@ -33,6 +33,12 @@ Todo:
     * Combine error and gradient code into a single function for speed.
 """
 
+
+__all__ = []
+__version__ = '0.0'
+__author__ = 'Eric Winter (ewinter@stsci.edu)'
+
+
 from math import sqrt
 import numpy as np
 from scipy.optimize import minimize
