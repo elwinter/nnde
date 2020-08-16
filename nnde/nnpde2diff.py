@@ -204,15 +204,23 @@ class NNPDE2DIFF(SLFFNN):
 
         return Yt
 
-    # def run_gradient(self, x):
-    #     """Compute the trained derivative (debug version)."""
-    #     n = len(x)
-    #     H = len(self.v)
-    #     w = self.w
-    #     u = self.u
-    #     v = self.v
+    def run_gradient(self, x):
+        """Compute the trained derivative."""
+        n = len(x)
+        w = self.w
+        u = self.u
+        v = self.v
 
-    #     BLAHBLAHBLAH
+        z = x.dot(w) + u
+        s = s_v(z)
+        s1 = s1_v(s)
+        N = s.dot(v)
+        delN = s1.dot((w*v).T)
+        delYt = np.zeros((n, m))
+        for i in range(n):
+            delYt[i] = self.tf.delYt(x[i], N[i], delN[i])
+
+        return delYt
 
     def run_gradient_debug(self, x):
         """Compute the trained derivative (debug version)."""
@@ -1403,7 +1411,7 @@ if __name__ == '__main__':
     H = 5
 
     # Test each training algorithm on each equation.
-    for pde in ('eq.diff2d_halfsine+increase',):
+    for pde in ('eq.diff3d_halfsine+increase',):
         print('Examining %s.' % pde)
 
         # Read the equation definition.
@@ -1486,7 +1494,7 @@ if __name__ == '__main__':
                 print('Yt_err =', Yt_err)
                 Yt_rmserr = sqrt(np.sum(Yt_err**2)/n)
 
-            delYt = net.run_gradient_debug(x_train)
+            delYt = net.run_gradient(x_train)
             print('The trained gradient is:')
             print('delYt =', delYt)
 
