@@ -32,11 +32,11 @@ from math import sqrt
 import numpy as np
 from scipy.optimize import minimize
 
-from kdelta import kdelta
-from pde1ivp import PDE1IVP
-import sigma
-from slffnn import SLFFNN
-from trainingdata import create_training_grid
+from nnde.kdelta import kdelta
+from nnde.pde1ivp import PDE1IVP
+import nnde.sigma as sigma
+from nnde.slffnn import SLFFNN
+from nnde.trainingdata import create_training_grid
 
 
 # Default values for method parameters

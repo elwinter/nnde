@@ -33,7 +33,7 @@ Todo:
 
 from importlib import import_module
 
-from pde1 import PDE1
+from nnde.pde1 import PDE1
 
 
 class PDE1IVP(PDE1):

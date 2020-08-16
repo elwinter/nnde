@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="nnde",
-    version="0.0.1",
+    version="0.0.3",
     author="Eric Winter",
     author_email="ewinter@stsci.edu",
     description="A package implementing a collection of neural networks to solve ordinary and partial differential equations",

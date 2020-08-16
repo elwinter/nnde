@@ -30,7 +30,7 @@ Todo:
 """
 
 
-from pde import PDE
+from nnde.pde import PDE
 
 
 class PDE1(PDE):

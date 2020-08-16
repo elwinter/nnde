@@ -38,14 +38,14 @@ import numpy as np
 from scipy.optimize import minimize
 import sys
 
-from diff1dtrialfunction import Diff1DTrialFunction
-from diff2dtrialfunction import Diff2DTrialFunction
-from diff3dtrialfunction import Diff3DTrialFunction
-from kdelta import kdelta
-from pde2diff import PDE2DIFF
-import sigma
-from slffnn import SLFFNN
-from trainingdata import create_training_grid
+from nnde.diff1dtrialfunction import Diff1DTrialFunction
+from nnde.diff2dtrialfunction import Diff2DTrialFunction
+from nnde.diff3dtrialfunction import Diff3DTrialFunction
+from nnde.kdelta import kdelta
+from nnde.pde2diff import PDE2DIFF
+import nnde.sigma as sigma
+from nnde.slffnn import SLFFNN
+from nnde.trainingdata import create_training_grid
 
 # Default values for method parameters
 DEFAULT_DEBUG = False

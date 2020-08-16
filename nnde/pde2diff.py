@@ -30,7 +30,7 @@ Todo:
 
 from importlib import import_module
 
-from pde2 import PDE2
+from nnde.pde2 import PDE2
 
 
 class PDE2DIFF(PDE2):

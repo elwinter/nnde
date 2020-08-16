@@ -50,10 +50,10 @@ from math import sqrt
 import numpy as np
 from scipy.optimize import minimize
 
-from ode1ivp import ODE1IVP
-import sigma
-from slffnn import SLFFNN
-from trainingdata import create_training_grid
+from nnde.ode1ivp import ODE1IVP
+from nnde import sigma
+from nnde.slffnn import SLFFNN
+from nnde.trainingdata import create_training_grid
 
 
 # Default values for method parameters

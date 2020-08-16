@@ -28,7 +28,7 @@ __version__ = '0.0'
 __author__ = 'Eric Winter (ewinter@stsci.edu)'
 
 
-from differentialequation import DifferentialEquation
+from nnde.differentialequation import DifferentialEquation
 
 
 class ODE(DifferentialEquation):

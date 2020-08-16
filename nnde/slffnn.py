@@ -28,7 +28,7 @@ __version__ = '0.0'
 __author__ = 'Eric Winter (ewinter@stsci.edu)'
 
 
-from neuralnetwork import NeuralNetwork
+from nnde.neuralnetwork import NeuralNetwork
 
 
 class SLFFNN(NeuralNetwork):

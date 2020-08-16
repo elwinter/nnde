@@ -1,8 +1,8 @@
 import numpy as np
 
-from nnpde2diff import NNPDE2DIFF
-from pde2diff import PDE2DIFF
-from trainingdata import create_training_grid
+from nnde.nnpde2diff import NNPDE2DIFF
+from nnde.pde2diff import PDE2DIFF
+from nnde.trainingdata import create_training_grid
 
 
 # Create training data.

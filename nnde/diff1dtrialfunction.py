@@ -49,7 +49,7 @@ Todo:
 from math import cos, pi, sin
 import numpy as np
 
-from trialfunction import TrialFunction
+from nnde.trialfunction import TrialFunction
 
 
 class Diff1DTrialFunction(TrialFunction):

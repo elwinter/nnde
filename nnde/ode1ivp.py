@@ -62,7 +62,7 @@ __author__ = 'Eric Winter (ewinter@stsci.edu)'
 
 from importlib import import_module
 
-from ode1 import ODE1
+from nnde.ode1 import ODE1
 
 
 class ODE1IVP(ODE1):
