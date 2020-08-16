@@ -50,7 +50,6 @@ from math import sqrt
 import numpy as np
 from scipy.optimize import minimize
 
-from kdelta import kdelta
 from ode1ivp import ODE1IVP
 import sigma
 from slffnn import SLFFNN
