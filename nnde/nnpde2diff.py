@@ -213,6 +213,7 @@ class NNPDE2DIFF(SLFFNN):
     def run_gradient(self, x):
         """Compute the trained derivative."""
         n = len(x)
+        m = len(self.eq.bc)
         w = self.w
         u = self.u
         v = self.v
