@@ -361,6 +361,15 @@ class NNPDE2DIFF(SLFFNN):
 
     # Internal methods below this point
 
+    def __str__(self):
+        """Print a human-readable version of the network."""
+        s = ''
+        s += '%s\n' % self.eq.name
+        s += 'w = %s\n' % self.w
+        s += 'u = %s\n' % self.u
+        s += 'v = %s\n' % self.v
+        return s
+
     def _train_delta(self, x, opts=DEFAULT_OPTS):
         """Train using the delta method."""
 
