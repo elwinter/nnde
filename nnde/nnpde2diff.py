@@ -955,10 +955,9 @@ class NNPDE2DIFF(SLFFNN):
         # use by the minimize() method.
         p = np.hstack((self.w.flatten(), self.u, self.v))
 
-        # Add the status callback if requested.
-        callback = None
-        if my_opts['verbose']:
-            callback = self._print_progress
+        # Set up the iteration callback.
+        callback = self._iteration_callback
+        self._verbose = my_opts['verbose']
 
         # Use the error jacobian if requested.
         jac = None
@@ -1394,11 +1393,12 @@ class NNPDE2DIFF(SLFFNN):
 
         return jac
 
-    def _print_progress(self, xk):
-        """Callback to print progress message from optimizer"""
-        print('nit =', self.nit)
+    def _iteration_callback(self, xk):
+        """Callback after each optimizer iteration"""
+        if self._verbose:
+            print('nit =', self.nit)
         self.nit += 1
-        # print('xk =', xk)
+
         # Log the current parameters.
         self.phist = np.vstack((self.phist, xk))
 
@@ -1424,7 +1424,7 @@ if __name__ == '__main__':
     H = 5
 
     # Test each training algorithm on each equation.
-    for pde in ('eq.diff3d_halfsine+increase',):
+    for pde in ('eq.diff1d_halfsine+increase',):
         print('Examining %s.' % pde)
 
         # Read the equation definition.
