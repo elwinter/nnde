@@ -35,8 +35,8 @@ Todo:
 
 
 __all__ = []
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
+__version__ = "0.0"
+__author__ = "Eric Winter (ewinter@stsci.edu)"
 
 
 from math import sqrt
@@ -58,7 +58,7 @@ DEFAULT_DEBUG = False
 DEFAULT_ETA = 0.1
 DEFAULT_MAXEPOCHS = 1000
 DEFAULT_NHID = 10
-DEFAULT_TRAINALG = 'delta'
+DEFAULT_TRAINALG = "delta"
 DEFAULT_UMAX = 1
 DEFAULT_UMIN = -1
 DEFAULT_USE_JACOBIAN = False
@@ -68,18 +68,18 @@ DEFAULT_VMIN = -1
 DEFAULT_WMAX = 1
 DEFAULT_WMIN = -1
 DEFAULT_OPTS = {
-    'debug':        DEFAULT_DEBUG,
-    'eta':          DEFAULT_ETA,
-    'maxepochs':    DEFAULT_MAXEPOCHS,
-    'nhid':         DEFAULT_NHID,
-    'umax':         DEFAULT_UMAX,
-    'umin':         DEFAULT_UMIN,
-    'use_jacobian': DEFAULT_USE_JACOBIAN,
-    'verbose':      DEFAULT_VERBOSE,
-    'vmax':         DEFAULT_VMAX,
-    'vmin':         DEFAULT_VMIN,
-    'wmax':         DEFAULT_WMAX,
-    'wmin':         DEFAULT_WMIN
+    "debug":        DEFAULT_DEBUG,
+    "eta":          DEFAULT_ETA,
+    "maxepochs":    DEFAULT_MAXEPOCHS,
+    "nhid":         DEFAULT_NHID,
+    "umax":         DEFAULT_UMAX,
+    "umin":         DEFAULT_UMIN,
+    "use_jacobian": DEFAULT_USE_JACOBIAN,
+    "verbose":      DEFAULT_VERBOSE,
+    "vmax":         DEFAULT_VMAX,
+    "vmin":         DEFAULT_VMIN,
+    "wmax":         DEFAULT_WMAX,
+    "wmin":         DEFAULT_WMIN
     }
 
 
@@ -126,11 +126,11 @@ class NNPDE2DIFF(SLFFNN):
 
         # If the supplied equation object has optimized versions of the
         # boundary condition function and derivatives, use them.
-        if hasattr(self.eq, 'A'):
+        if hasattr(self.eq, "A"):
             self.tf.A = self.eq.A
-        if hasattr(self.eq, 'delA'):
+        if hasattr(self.eq, "delA"):
             self.tf.delA = self.eq.delA
-        if hasattr(self.eq, 'del2A'):
+        if hasattr(self.eq, "del2A"):
             self.tf.del2A = self.eq.del2A
 
         # Create the parameter history array.
@@ -141,12 +141,12 @@ class NNPDE2DIFF(SLFFNN):
         my_opts = dict(DEFAULT_OPTS)
         my_opts.update(opts)
 
-        if trainalg == 'delta':
+        if trainalg == "delta":
             self._train_delta(x, opts=my_opts)
-        elif trainalg in ('Nelder-Mead', 'Powell', 'CG', 'BFGS'):
+        elif trainalg in ("Nelder-Mead", "Powell", "CG", "BFGS"):
             self._train_minimize(x, trainalg, opts=my_opts)
         else:
-            print('ERROR: Invalid training algorithm (%s)!' % trainalg)
+            print("ERROR: Invalid training algorithm (%s)!" % trainalg)
             exit(1)
 
     def run(self, x):
@@ -360,11 +360,11 @@ class NNPDE2DIFF(SLFFNN):
 
     def __str__(self):
         """Print a human-readable version of the network."""
-        s = ''
-        s += '%s\n' % self.eq.name
-        s += 'w = %s\n' % self.w
-        s += 'u = %s\n' % self.u
-        s += 'v = %s\n' % self.v
+        s = ""
+        s += "%s\n" % self.eq.name
+        s += "w = %s\n" % self.w
+        s += "u = %s\n" % self.u
+        s += "v = %s\n" % self.v
         return s
 
     def _train_delta(self, x, opts=DEFAULT_OPTS):
@@ -375,11 +375,11 @@ class NNPDE2DIFF(SLFFNN):
 
         # Sanity-check arguments.
         assert len(x) > 0
-        assert my_opts['maxepochs'] > 0
-        assert my_opts['eta'] > 0
-        assert my_opts['vmin'] < my_opts['vmax']
-        assert my_opts['wmin'] < my_opts['wmax']
-        assert my_opts['umin'] < my_opts['umax']
+        assert my_opts["maxepochs"] > 0
+        assert my_opts["eta"] > 0
+        assert my_opts["vmin"] < my_opts["vmax"]
+        assert my_opts["wmin"] < my_opts["wmax"]
+        assert my_opts["umin"] < my_opts["umax"]
 
         # Determine the number of training points, independent variables, and
         # hidden nodes.
@@ -388,16 +388,16 @@ class NNPDE2DIFF(SLFFNN):
         H = len(self.v)   # Number of hidden nodes
 
         # Change notation for convenience.
-        debug = my_opts['debug']
-        verbose = my_opts['verbose']
-        eta = my_opts['eta']  # Learning rate
-        maxepochs = my_opts['maxepochs']  # Number of training epochs
-        wmin = my_opts['wmin']  # Network parameter limits
-        wmax = my_opts['wmax']
-        umin = my_opts['umin']
-        umax = my_opts['umax']
-        vmin = my_opts['vmin']
-        vmax = my_opts['vmax']
+        debug = my_opts["debug"]
+        verbose = my_opts["verbose"]
+        eta = my_opts["eta"]  # Learning rate
+        maxepochs = my_opts["maxepochs"]  # Number of training epochs
+        wmin = my_opts["wmin"]  # Network parameter limits
+        wmax = my_opts["wmax"]
+        umin = my_opts["umin"]
+        umax = my_opts["umax"]
+        vmin = my_opts["vmin"]
+        vmax = my_opts["vmax"]
 
         # Create the hidden node weights, biases, and output node weights.
         w = np.random.uniform(wmin, wmax, (m, H))
@@ -420,7 +420,7 @@ class NNPDE2DIFF(SLFFNN):
         # Train the network for the specified number of epochs.
         for epoch in range(maxepochs):
             if debug:
-                print('Starting epoch %d.' % epoch)
+                print("Starting epoch %d." % epoch)
 
             # Compute the new values of the network parameters.
             w -= eta*dE_dw
@@ -579,11 +579,11 @@ class NNPDE2DIFF(SLFFNN):
 
         # Sanity-check arguments.
         assert len(x) > 0
-        assert my_opts['maxepochs'] > 0
-        assert my_opts['eta'] > 0
-        assert my_opts['vmin'] < my_opts['vmax']
-        assert my_opts['wmin'] < my_opts['wmax']
-        assert my_opts['umin'] < my_opts['umax']
+        assert my_opts["maxepochs"] > 0
+        assert my_opts["eta"] > 0
+        assert my_opts["vmin"] < my_opts["vmax"]
+        assert my_opts["wmin"] < my_opts["wmax"]
+        assert my_opts["umin"] < my_opts["umax"]
 
         # Determine the number of training points, independent variables, and
         # hidden nodes.
@@ -592,16 +592,16 @@ class NNPDE2DIFF(SLFFNN):
         H = len(self.v)   # Number of hidden nodes
 
         # Change notation for convenience.
-        debug = my_opts['debug']
-        verbose = my_opts['verbose']
-        eta = my_opts['eta']  # Learning rate
-        maxepochs = my_opts['maxepochs']  # Number of training epochs
-        wmin = my_opts['wmin']  # Network parameter limits
-        wmax = my_opts['wmax']
-        umin = my_opts['umin']
-        umax = my_opts['umax']
-        vmin = my_opts['vmin']
-        vmax = my_opts['vmax']
+        debug = my_opts["debug"]
+        verbose = my_opts["verbose"]
+        eta = my_opts["eta"]  # Learning rate
+        maxepochs = my_opts["maxepochs"]  # Number of training epochs
+        wmin = my_opts["wmin"]  # Network parameter limits
+        wmax = my_opts["wmax"]
+        umin = my_opts["umin"]
+        umax = my_opts["umax"]
+        vmin = my_opts["vmin"]
+        vmax = my_opts["vmax"]
 
         # Create the hidden node weights, biases, and output node weights.
         w = np.random.uniform(wmin, wmax, (m, H))
@@ -619,7 +619,7 @@ class NNPDE2DIFF(SLFFNN):
         # Train the network.
         for epoch in range(maxepochs):
             if debug:
-                print('Starting epoch %d.' % epoch)
+                print("Starting epoch %d." % epoch)
 
             # Compute the new values of the network parameters.
             for j in range(m):
@@ -935,18 +935,18 @@ class NNPDE2DIFF(SLFFNN):
 
         # Sanity-check arguments.
         assert len(x) > 0
-        assert opts['vmin'] < opts['vmax']
-        assert opts['wmin'] < opts['wmax']
-        assert opts['umin'] < opts['umax']
+        assert opts["vmin"] < opts["vmax"]
+        assert opts["wmin"] < opts["wmax"]
+        assert opts["umin"] < opts["umax"]
 
         # Create the hidden node weights, biases, and output node weights.
         m = len(self.eq.bc)
         H = len(self.v)
 
         # Create the hidden node weights, biases, and output node weights.
-        self.w = np.random.uniform(my_opts['wmin'], my_opts['wmax'], (m, H))
-        self.u = np.random.uniform(my_opts['umin'], my_opts['umax'], H)
-        self.v = np.random.uniform(my_opts['vmin'], my_opts['vmax'], H)
+        self.w = np.random.uniform(my_opts["wmin"], my_opts["wmax"], (m, H))
+        self.u = np.random.uniform(my_opts["umin"], my_opts["umax"], H)
+        self.v = np.random.uniform(my_opts["vmin"], my_opts["vmax"], H)
         # self.w = np.zeros((m, H))
         # self.u = np.zeros(H)
         # self.v = np.zeros(H)
@@ -957,11 +957,11 @@ class NNPDE2DIFF(SLFFNN):
 
         # Set up the iteration callback.
         callback = self._iteration_callback
-        self._verbose = my_opts['verbose']
+        self._verbose = my_opts["verbose"]
 
         # Use the error jacobian if requested.
         jac = None
-        if my_opts['use_jacobian']:
+        if my_opts["use_jacobian"]:
             jac = self._compute_error_jacobian_debug
 
         # Minimize the error function to get the new parameter values.
@@ -1396,14 +1396,14 @@ class NNPDE2DIFF(SLFFNN):
     def _iteration_callback(self, xk):
         """Callback after each optimizer iteration"""
         if self._verbose:
-            print('nit =', self.nit)
+            print("nit =", self.nit)
         self.nit += 1
 
         # Log the current parameters.
         self.phist = np.vstack((self.phist, xk))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     # Create training data.
     nx = 5
@@ -1416,23 +1416,23 @@ if __name__ == '__main__':
 
     # Options for training
     training_opts = {}
-    training_opts['debug'] = False
-    training_opts['verbose'] = True
-    training_opts['eta'] = 0.1
-    training_opts['maxepochs'] = 1000
-    training_opts['use_jacobian'] = False
+    training_opts["debug"] = False
+    training_opts["verbose"] = True
+    training_opts["eta"] = 0.1
+    training_opts["maxepochs"] = 1000
+    training_opts["use_jacobian"] = False
     H = 5
 
     # Test each training algorithm on each equation.
-    for pde in ('eq.diff1d_halfsine+increase',):
-        print('Examining %s.' % pde)
+    for pde in ("eq.diff1d_halfsine",):
+        print("Examining %s." % pde)
 
         # Read the equation definition.
         eq = PDE2DIFF(pde)
 
         # Fetch the dimensionality of the problem.
         m = len(eq.bc)
-        print('Differential equation %s has %d dimensions.' % (eq, m))
+        print("Differential equation %s has %d dimensions." % (eq, m))
 
         # Select the appropriate training set.
         if m == 2:
@@ -1453,7 +1453,7 @@ if __name__ == '__main__':
             Ya = np.zeros(n)
             for i in range(n):
                 Ya[i] = eq.Ya(x_train[i])
-            print('Ya =', Ya)
+            print("Ya =", Ya)
 
         # Analytical gradient (if available)
         delYa = None
@@ -1463,7 +1463,7 @@ if __name__ == '__main__':
             for i in range(n):
                 for j in range(m):
                     delYa[i][j] = eq.delYa[j](x_train[i])
-            print('delYa =', delYa)
+            print("delYa =", delYa)
 
         # Analytical Laplacian (if available)
         del2Ya = None
@@ -1473,12 +1473,12 @@ if __name__ == '__main__':
             for i in range(n):
                 for j in range(m):
                     del2Ya[i][j] = eq.del2Ya[j](x_train[i])
-            print('del2Ya =', del2Ya)
+            print("del2Ya =", del2Ya)
 
-        # for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS',
-        #                  'Newton-CG'):
-        for trainalg in ('BFGS',):
-            print('Training using %s algorithm.' % trainalg)
+        # for trainalg in ("delta", "Nelder-Mead", "Powell", "CG", "BFGS",
+        #                  "Newton-CG"):
+        for trainalg in ("BFGS",):
+            print("Training using %s algorithm." % trainalg)
 
             # Create and train the neural network.
             net = NNPDE2DIFF(eq, nhid=H)
@@ -1486,48 +1486,48 @@ if __name__ == '__main__':
             try:
                 net.train(x_train, trainalg=trainalg, opts=training_opts)
             except (OverflowError, ValueError) as e:
-                print('Error using %s algorithm on %s!' % (trainalg, pde))
+                print("Error using %s algorithm on %s!" % (trainalg, pde))
                 print(e)
                 print()
                 continue
 
             if net.res:
                 print(net.res)
-            print('The trained network is:')
+            print("The trained network is:")
             print(net)
 
             # Run the network to get the trained solution.
             Yt = net.run(x_train)
-            print('The trained solution is:')
-            print('Yt =', Yt)
+            print("The trained solution is:")
+            print("Yt =", Yt)
 
             Yt_rmserr = None
             if eq.Ya:
                 Yt_err = Yt - Ya
-                print('The error in the trained solution is:')
-                print('Yt_err =', Yt_err)
+                print("The error in the trained solution is:")
+                print("Yt_err =", Yt_err)
                 Yt_rmserr = sqrt(np.sum(Yt_err**2)/n)
 
             delYt = net.run_gradient(x_train)
-            print('The trained gradient is:')
-            print('delYt =', delYt)
+            print("The trained gradient is:")
+            print("delYt =", delYt)
 
             delYt_rmserr = None
             if eq.delYa:
                 delYt_err = delYt - delYa
-                print('The error in the trained gradient is:')
-                print('delYt_err =', delYt_err)
+                print("The error in the trained gradient is:")
+                print("delYt_err =", delYt_err)
                 delYt_rmserr = sqrt(np.sum(delYt_err**2)/(n*m))
 
             del2Yt = net.run_laplacian(x_train)
-            print('The trained Laplacian is:')
-            print('del2Yt =', del2Yt)
+            print("The trained Laplacian is:")
+            print("del2Yt =", del2Yt)
 
             del2Yt_rmserr = None
             if eq.del2Ya:
                 del2Yt_err = del2Yt - del2Ya
-                print('The error in the trained Laplacian is:')
-                print('del2Yt_err =', del2Yt_err)
+                print("The error in the trained Laplacian is:")
+                print("del2Yt_err =", del2Yt_err)
                 del2Yt_rmserr = sqrt(np.sum(del2Yt_err**2)/(n*m))
 
             if eq.Ya:
