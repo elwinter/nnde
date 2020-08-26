@@ -112,3 +112,17 @@ venv.bak/
 ipynb/Untitled.ipynb
 try.py
 starargs-test.py
+del2Ya.dat
+del2Yt_err.dat
+del2Yt.dat
+delYa.dat
+delYt_err.dat
+delYt.dat
+error_heatmaps.png
+errors.png
+phist.dat
+phist.png
+training_points.dat
+Ya.dat
+Yt_err.dat
+Yt.dat
