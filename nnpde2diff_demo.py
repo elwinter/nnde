@@ -76,7 +76,6 @@ def main():
     # Options for training
     training_opts = {}
     training_opts["debug"] = True
-    training_opts["nhid"] = H
     training_opts["verbose"] = True
 
     # Create and train the neural network.
