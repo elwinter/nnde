@@ -109,3 +109,6 @@ venv.bak/
 # Emacs backup files
 *~
 .vscode/settings.json
+ipynb/Untitled.ipynb
+try.py
+starargs-test.py
