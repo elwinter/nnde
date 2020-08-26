@@ -127,13 +127,10 @@ class NNPDE2DIFF(SLFFNN):
         # If the supplied equation object has optimized versions of the
         # boundary condition function and derivatives, use them.
         if hasattr(self.eq, 'A'):
-            print("Using optimized A().")
             self.tf.A = self.eq.A
         if hasattr(self.eq, 'delA'):
-            print("Using optimized delA().")
             self.tf.delA = self.eq.delA
         if hasattr(self.eq, 'del2A'):
-            print("Using optimized del2A().")
             self.tf.del2A = self.eq.del2A
 
         # Create the parameter history array.
@@ -1480,7 +1477,7 @@ if __name__ == '__main__':
 
         # for trainalg in ('delta', 'Nelder-Mead', 'Powell', 'CG', 'BFGS',
         #                  'Newton-CG'):
-        for trainalg in ('delta',):
+        for trainalg in ('BFGS',):
             print('Training using %s algorithm.' % trainalg)
 
             # Create and train the neural network.
@@ -1499,6 +1496,7 @@ if __name__ == '__main__':
             print('The trained network is:')
             print(net)
 
+            # Run the network to get the trained solution.
             Yt = net.run(x_train)
             print('The trained solution is:')
             print('Yt =', Yt)
