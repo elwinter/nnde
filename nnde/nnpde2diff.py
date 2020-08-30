@@ -40,9 +40,10 @@ __author__ = "Eric Winter (ewinter@stsci.edu)"
 
 
 from math import sqrt
+import sys
+
 import numpy as np
 from scipy.optimize import minimize
-import sys
 
 from nnde.diff1dtrialfunction import Diff1DTrialFunction
 from nnde.diff2dtrialfunction import Diff2DTrialFunction
