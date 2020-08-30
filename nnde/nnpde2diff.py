@@ -976,7 +976,7 @@ class NNPDE2DIFF(SLFFNN):
         self.u = res.x[m*H:(m + 1)*H]
         self.v = res.x[(m + 1)*H:(m + 2)*H]
 
-    def __compute_error(self, p, x):
+    def _compute_error(self, p, x):
         """Compute the current error in the trained solution."""
 
         # Unpack the network parameters.
