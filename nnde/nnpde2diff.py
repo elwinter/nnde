@@ -374,19 +374,11 @@ class NNPDE2DIFF(SLFFNN):
         my_opts = dict(DEFAULT_OPTS)
         my_opts.update(opts)
 
-        # Sanity-check arguments.
-        assert len(x) > 0
-        assert my_opts["maxepochs"] > 0
-        assert my_opts["eta"] > 0
-        assert my_opts["vmin"] < my_opts["vmax"]
-        assert my_opts["wmin"] < my_opts["wmax"]
-        assert my_opts["umin"] < my_opts["umax"]
-
         # Determine the number of training points, independent variables, and
         # hidden nodes.
-        n = len(x)  # Number of training points
+        n = len(x)
         m = len(self.eq.bc)
-        H = len(self.v)   # Number of hidden nodes
+        H = len(self.v)
 
         # Change notation for convenience.
         debug = my_opts["debug"]
@@ -404,9 +396,6 @@ class NNPDE2DIFF(SLFFNN):
         w = np.random.uniform(wmin, wmax, (m, H))
         u = np.random.uniform(umin, umax, H)
         v = np.random.uniform(vmin, vmax, H)
-        # w = np.zeros((m, H))
-        # u = np.zeros(H)
-        # v = np.zeros(H)
 
         # Initial parameter deltas are 0.
         dE_dw = np.zeros((m, H))
@@ -415,8 +404,7 @@ class NNPDE2DIFF(SLFFNN):
 
         # This small identity matrix is used during the computation of
         # some of the derivatives below.
-        kd = np.identity(m)
-        kd = kd[np.newaxis, :, :, np.newaxis]
+        kd = np.identity(m)[np.newaxis, :, :, np.newaxis]
 
         # Train the network for the specified number of epochs.
         for epoch in range(maxepochs):
@@ -578,19 +566,11 @@ class NNPDE2DIFF(SLFFNN):
         my_opts = dict(DEFAULT_OPTS)
         my_opts.update(opts)
 
-        # Sanity-check arguments.
-        assert len(x) > 0
-        assert my_opts["maxepochs"] > 0
-        assert my_opts["eta"] > 0
-        assert my_opts["vmin"] < my_opts["vmax"]
-        assert my_opts["wmin"] < my_opts["wmax"]
-        assert my_opts["umin"] < my_opts["umax"]
-
         # Determine the number of training points, independent variables, and
         # hidden nodes.
-        n = len(x)  # Number of training points
+        n = len(x)
         m = len(self.eq.bc)
-        H = len(self.v)   # Number of hidden nodes
+        H = len(self.v)
 
         # Change notation for convenience.
         debug = my_opts["debug"]
