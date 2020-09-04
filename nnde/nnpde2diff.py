@@ -946,7 +946,7 @@ class NNPDE2DIFF(SLFFNN):
             jac = self._compute_error_jacobian_debug
 
         # Minimize the error function to get the new parameter values.
-        res = minimize(self._compute_error_debug, p, method=trainalg,
+        res = minimize(self._compute_error, p, method=trainalg,
                        jac=jac, args=(x), callback=callback)
         self.res = res
 
@@ -961,13 +961,20 @@ class NNPDE2DIFF(SLFFNN):
 
         # Unpack the network parameters.
         n = len(x)
-        m = len(x[0])
-        H = int(len(p)/(m + 2))
+        m = len(self.eq.bc)
+        H = len(self.v)
+        # print('n =', n)
+        # print('m =', m)
+        # print('H =', H)
+
         w = np.zeros((m, H))
         for j in range(m):
             w[j] = p[j*H:(j + 1)*H]
-        u = p[(m - 1)*H:m*H]
-        v = p[m*H:(m + 1)*H]
+        u = p[m*H:(m + 1)*H]
+        v = p[(m + 1)*H:(m + 2)*H]
+        # print('w =', w)
+        # print('u =', u)
+        # print('v =', v)
 
         # Weighted inputs and transfer functions and derivatives.
         z = x.dot(w) + u
@@ -995,7 +1002,6 @@ class NNPDE2DIFF(SLFFNN):
             G[i] = self.eq.G(x[i], Yt[i], delYt[i], del2Yt[i])
 
         E2 = np.sum(G**2)
-
         return E2
 
     def _compute_error_debug(self, p, x):
