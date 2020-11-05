@@ -1,14 +1,11 @@
 # nnde
-nnde is a package of Python modules which implement a set of neural networks
-which solve ordinary and partial differential equations.
 
-The technique is based on Lagaris et al (1998).
+A Python package of that implement the neural networks method for solving ordinary and partial differential equations.
 
-Reference: Lagaris et al, IEEE Transactions on Neural Networks 8(5),
-p. 987 (1998).
+The technique is based on [Lagaris et al. (1998)](https://doi.org/10.1109/72.712178).
+
+A paper describing the package is available at https://github.com/elwinter/joss_nndepaper.
 
 # Contact
 
-Eric Winter
-ewinter@stsci.edu
-2020-08-11
+Eric Winter <ewinter@stsci.edu>
