@@ -27,7 +27,7 @@ __author__ = 'Eric Winter (ewinter@stsci.edu)'
 from itertools import repeat
 
 
-def create_training_grid(n):
+def create_training_grid(n: int) -> list:
     """Create a grid of training data.  The input n is an integer, or a list
     containing the numbers of evenly-spaced data points to use in each
     dimension.  For example, for an (x, y, z) grid, with n = [3, 4, 5], we
@@ -69,7 +69,7 @@ def create_training_grid(n):
     return X
 
 
-def prod(n):
+def prod(n: float) -> float:
     """Compute the product of the elements of a list of numbers."""
     p = 1
     for nn in n:
