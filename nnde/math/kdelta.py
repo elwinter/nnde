@@ -1,5 +1,4 @@
-"""
-kdelta - Python module to implement the Kronecker delta function
+"""Python module to implement the Kronecker delta function
 
 This module provides the Kronecker delta function:
 
@@ -15,12 +14,7 @@ To do:
 """
 
 
-__all__ = ['kdelta']
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
-
-
-def kdelta(i, j):
+def kdelta(i: int, j: int) -> int:
     """
     The Konecker delta function.
 
