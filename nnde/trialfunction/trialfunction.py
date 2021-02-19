@@ -24,11 +24,6 @@ Todo:
 """
 
 
-__all__ = []
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
-
-
 class TrialFunction():
     """Trial function base class"""
 
@@ -38,10 +33,4 @@ class TrialFunction():
 
     def Yt(self, x, N):
         """Trial function"""
-        return None
-
-
-if __name__ == '__main__':
-    tf = TrialFunction()
-    print(tf)
-    assert tf.Yt(None, None) is None
+        raise Exception
