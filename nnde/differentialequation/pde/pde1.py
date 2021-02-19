@@ -23,31 +23,17 @@ Methods:
     G - Function for differential equation, in the form G() = 0,
     where G() is a function of the independent variables x, the solution
     Y(x), and the Jacobian of Y(x).
-
-Todo:
-    * Add function annotations.
-    * Add variable annotations.
 """
 
 
-__all__ = []
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
-
-
-from nnde.pde import PDE
+from nnde.differentialequation.pde.pde import PDE
 
 
 class PDE1(PDE):
     """Base class for all 1st-order partial differential equation objects"""
 
     def __init__(self):
-        super().__init__()
+        PDE.__init__(self)
 
     def G(self, x, Y, delY):
-        return None
-
-
-if __name__ == '__main__':
-    pde1 = PDE1()
-    print(pde1)
+        raise Exception
