@@ -23,12 +23,7 @@ Todo:
 """
 
 
-__all__ = []
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
-
-
-from nnde.differentialequation import DifferentialEquation
+from nnde.differentialequation.differentialequation import DifferentialEquation
 
 
 class PDE(DifferentialEquation):
@@ -36,9 +31,4 @@ class PDE(DifferentialEquation):
 
     def __init__(self):
         """Constructor for PDE objects - must be  overridden in subclass."""
-        super().__init__()
-
-
-if __name__ == '__main__':
-    pde = PDE()
-    print(pde)
+        DifferentialEquation.__init__(self)
