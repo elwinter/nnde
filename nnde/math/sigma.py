@@ -1,5 +1,4 @@
-"""
-sigma - Python module to implement the sigmoid function and derivatives
+"""Python module to implement the sigmoid function and derivatives
 
 This module provides the sigma transfer function and derivatives of orders
 1-4.  This function is frequently used as a transfer function in neural
@@ -52,11 +51,6 @@ Menon, A., Mehrotra, K., Mohan, C., and Ranka, S., Neural Networks,
 Volume 9, Number 5, pp. 819-835 (1996)
 """
 
-__all__ = ['sigma', 'dsigma_dz', 'd2sigma_dz2', 'd3sigma_dz3', 'd4sigma_dz4',
-           's', 's1', 's2', 's3', 's4']
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
-
 
 from math import exp
 from numpy import isclose
@@ -64,28 +58,28 @@ from numpy import isclose
 
 # Standard versions
 
-def sigma(z):
+def sigma(z: float) -> float:
     """Compute the sigma function of z."""
     return 1/(1 + exp(-z))
 
 
-def dsigma_dz(z):
+def dsigma_dz(z: float) -> float:
     """Compute the first derivative of the sigma function of z."""
     return exp(-z)/(1 + exp(-z))**2
 
 
-def d2sigma_dz2(z):
+def d2sigma_dz2(z: float) -> float:
     """Compute the second derivative of the sigma function of z."""
     return 2*exp(-2*z)/(1 + exp(-z))**3 - exp(-z)/(1 + exp(-z))**2
 
 
-def d3sigma_dz3(z):
+def d3sigma_dz3(z: float) -> float:
     """Compute the third derivative of the sigma function of z."""
     return (6*exp(-3*z)/(1 + exp(-z))**4 - 6 * exp(-2*z)/(1 + exp(-z))**3
             + exp(-z)/(1 + exp(-z))**2)
 
 
-def d4sigma_dz4(z):
+def d4sigma_dz4(z: float) -> float:
     """Compute the fourth derivative of the sigma function of z."""
     return (24*exp(-4*z)/(1 + exp(-z))**5 - 36*exp(-3*z)/(1 + exp(-z))**4
             + 14*exp(-2*z)/(1 + exp(-z))**3 - exp(-z)/(1 + exp(-z))**2)
@@ -93,30 +87,30 @@ def d4sigma_dz4(z):
 
 # Optimized versions
 
-def s(z):
+def s(z: float) -> float:
     """Compute the sigma function of z."""
     return 1/(1 + exp(-z))
 
 
-def s1(s):
+def s1(s: float) -> float:
     """Compute the first derivative of the sigma function of z where
     s = s(z)."""
     return s - s**2
 
 
-def s2(s):
+def s2(s: float) -> float:
     """Compute the second derivative of the sigma function of z where
     s = s(z)."""
     return 2*s**3 - 3*s**2 + s
 
 
-def s3(s):
+def s3(s: float) -> float:
     """Compute the third derivative of the sigma function of z where
     s = s(z)."""
     return -6*s**4 + 12*s**3 - 7*s**2 + s
 
 
-def s4(s):
+def s4(s: float) -> float:
     """Compute the fourth derivative of the sigma function of z where
     s = s(z)."""
     return 24*s**5 - 60*s**4 + 50*s**3 - 15*s**2 + s
