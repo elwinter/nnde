@@ -29,21 +29,16 @@ Todo:
 """
 
 
-__all__ = []
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
-
-
 from importlib import import_module
 
-from nnde.pde2 import PDE2
+from nnde.differentialequation.pde.pde2 import PDE2
 
 
 class PDE2DIFF(PDE2):
     """Base class for all diffusion equation objects"""
 
     def __init__(self, modname=None):
-        super().__init__()
+        PDE2.__init__(self)
         self.name = None
         self.G = None
         self.bc = None
@@ -88,8 +83,3 @@ class PDE2DIFF(PDE2):
             if hasattr(pdemod, 'del2Ya'):
                 self.del2Ya = pdemod.del2Ya
 
-
-if __name__ == '__main__':
-    pde2diff = PDE2DIFF('eq.diff1d_zero')
-    print(pde2diff)
-    print(pde2diff.A)
