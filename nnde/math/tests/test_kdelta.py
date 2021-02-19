@@ -12,5 +12,6 @@ class TestBuilder(unittest.TestCase):
                 else:
                     self.assertEqual(kdelta(i, j), 0)
 
+
 if __name__ == '__main__':
     unittest.main()

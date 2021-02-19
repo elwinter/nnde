@@ -114,32 +114,3 @@ def s4(s: float) -> float:
     """Compute the fourth derivative of the sigma function of z where
     s = s(z)."""
     return 24*s**5 - 60*s**4 + 50*s**3 - 15*s**2 + s
-
-
-if __name__ == '__main__':
-
-    # Test value of z
-    z_test = 1
-
-    # Reference values for tests
-    s_ref = 0.731058578630005
-    s1_ref = 0.196611933241482
-    s2_ref = -0.0908577476729484
-    s3_ref = -0.0353255805162356
-    s4_ref = 0.123506861366393
-
-    print('Testing standard versions.')
-    s_ = sigma(z_test)
-    assert isclose(s_, s_ref)
-    assert isclose(dsigma_dz(z_test), s1_ref)
-    assert isclose(d2sigma_dz2(z_test), s2_ref)
-    assert isclose(d3sigma_dz3(z_test), s3_ref)
-    assert isclose(d4sigma_dz4(z_test), s4_ref)
-
-    print('Testing optimized versions.')
-    s_ = s(z_test)
-    assert isclose(s_, s_ref)
-    assert isclose(s1(s_), s1_ref)
-    assert isclose(s2(s_), s2_ref)
-    assert isclose(s3(s_), s3_ref)
-    assert isclose(s4(s_), s4_ref)
