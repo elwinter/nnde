@@ -11,3 +11,7 @@ class TestBuilder(unittest.TestCase):
     def test_G(self):
         with self.assertRaises(Exception):
             ODE1().G()
+
+
+if __name__ == '__main__':
+    unittest.main()

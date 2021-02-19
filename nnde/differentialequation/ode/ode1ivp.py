@@ -55,14 +55,9 @@ Todo:
 """
 
 
-__all__ = []
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
-
-
 from importlib import import_module
 
-from nnde.ode1 import ODE1
+from nnde.differentialequation.ode.ode1 import ODE1
 
 
 class ODE1IVP(ODE1):
@@ -76,7 +71,7 @@ class ODE1IVP(ODE1):
         diffeqmod - The name of the Python module containing the problem
         definition.
         """
-        super().__init__()
+        ODE1.__init__(self)
 
         # Initialize all attributes.
         self.name = None
@@ -117,10 +112,3 @@ class ODE1IVP(ODE1):
                 self.Ya = odemod.Ya
             if odemod.dYa_dx:
                 self.dYa_dx = odemod.dYa_dx
-
-
-if __name__ == '__main__':
-    ode1ivp = ODE1IVP()
-    print(ode1ivp)
-    ode1ivp = ODE1IVP('eq.lagaris_01')
-    print(ode1ivp)
