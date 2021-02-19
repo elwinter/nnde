@@ -33,7 +33,7 @@ class DifferentialEquation:
         """Constructor for DifferentialEquation objects"""
         pass
 
-    def G(self, *args):
+    def G(self):
         """Differential equation  to be solved, in the form G() = 0 -
         must be overridden in subclass."""
         raise Exception

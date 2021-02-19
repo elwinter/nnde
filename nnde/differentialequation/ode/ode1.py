@@ -19,19 +19,10 @@ Methods:
     G - Function for differential equation, in the form G() = 0,
     where G() is a function of the independent variable x, the solution
     Y(x), and the first derivative dY/x.
-
-Todo:
-    * Add function annotations.
-    * Add variable annotations.
 """
 
 
-__all__ = []
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
-
-
-from nnde.ode import ODE
+from nnde.differentialequation.ode.ode import ODE
 
 
 class ODE1(ODE):
@@ -40,7 +31,7 @@ class ODE1(ODE):
 
     def __init__(self):
         """Constructor for ODE1 objects - must be  overridden in subclass."""
-        super().__init__()
+        ODE.__init__(self)
 
     def G(self, x, Y, dY_dx):
         """Differential equation  to be solved, in the form G() = 0 -
@@ -50,9 +41,4 @@ class ODE1(ODE):
         Y is the value of the solution.
         dY_dx is the value of the 1st derivative of the solution.
         """
-        return None
-
-
-if __name__ == '__main__':
-    ode1 = ODE1()
-    print(ode1)
+        raise Exception
