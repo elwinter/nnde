@@ -1,13 +1,13 @@
 import setuptools
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="nnde",
     version="0.0.5",
     author="Eric Winter",
-    author_email="ewinter@stsci.edu",
+    author_email="eric.winter62@gmail.com",
     description=("A package implementing a collection of neural networks to"
                  " solve ordinary and partial differential equations"),
     long_description=long_description,
@@ -21,4 +21,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    tests_require=['nose'],
+    test_suite='nose.collector',
 )
