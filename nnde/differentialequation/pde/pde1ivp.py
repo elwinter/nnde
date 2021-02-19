@@ -31,14 +31,9 @@ Todo:
 """
 
 
-__all__ = []
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
-
-
 from importlib import import_module
 
-from nnde.pde1 import PDE1
+from nnde.differentialequation.pde.pde1 import PDE1
 
 
 class PDE1IVP(PDE1):
@@ -52,7 +47,7 @@ class PDE1IVP(PDE1):
         diffeqmod - The name of the Python module containing the problem
         definition.
         """
-        super().__init__()
+        PDE1.__init__(self)
         self.name = None
         self.G = None
         self.bc = None
@@ -78,8 +73,3 @@ class PDE1IVP(PDE1):
                 self.Ya = pdemod.Ya
             if pdemod.delYa:
                 self.delYa = pdemod.delYa
-
-
-if __name__ == '__main__':
-    pde1ivp = PDE1IVP()
-    print(pde1ivp)
