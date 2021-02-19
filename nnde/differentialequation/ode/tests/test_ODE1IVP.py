@@ -7,7 +7,7 @@ class TestBuilder(unittest.TestCase):
 
     def test___init__(self):
         ODE1IVP()
-        ODE1IVP()
+
 
 if __name__ == '__main__':
     unittest.main()
