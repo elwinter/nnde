@@ -26,25 +26,14 @@ Todo:
 """
 
 
-__all__ = []
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
-
-
 class DifferentialEquation:
     """Abstract base class for all differential equation objects"""
 
     def __init__(self):
-        """Constructor for DifferentialEquation objects - must be
-        overridden in subclass."""
+        """Constructor for DifferentialEquation objects"""
         pass
 
-    def G(self):
+    def G(self, *args):
         """Differential equation  to be solved, in the form G() = 0 -
         must be overridden in subclass."""
-        return None
-
-
-if __name__ == '__main__':
-    diffeq = DifferentialEquation()
-    print(diffeq)
+        raise Exception
