@@ -30,24 +30,14 @@ Todo:
 """
 
 
-__all__ = []
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
-
-
-from nnde.pde import PDE
+from nnde.differentialequation.pde.pde import PDE
 
 
 class PDE2(PDE):
     """Base class for all 2nd-order partial differential equation objects"""
 
     def __init__(self):
-        super().__init__()
+        PDE.__init__(self)
 
     def G(self, x, Y, delY, deldelY):
-        return None
-
-
-if __name__ == '__main__':
-    pde2 = PDE2()
-    print(pde2)
+        raise Exception
