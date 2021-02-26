@@ -18,7 +18,7 @@ Examples:
 from itertools import repeat
 
 
-def create_training_grid(n: int) -> list:
+def create_training_grid(n) -> list:
     """Create a grid of training data.
     
     The input n is an integer, or a list containing the numbers of evenly-
