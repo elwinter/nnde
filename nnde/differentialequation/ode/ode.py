@@ -20,6 +20,7 @@ Methods:
 
 
 from nnde.differentialequation.differentialequation import DifferentialEquation
+from nnde.exceptions.nndeexception import NNDEException
 
 
 class ODE(DifferentialEquation):
@@ -27,4 +28,4 @@ class ODE(DifferentialEquation):
 
     def __init__(self):
         """Constructor for ODE objects - must be  overridden in subclass."""
-        DifferentialEquation.__init__(self)
+        raise NNDEException

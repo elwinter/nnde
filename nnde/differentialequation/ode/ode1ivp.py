@@ -58,6 +58,7 @@ Todo:
 from importlib import import_module
 
 from nnde.differentialequation.ode.ode1 import ODE1
+from nnde.exceptions.nndeexception import NNDEException
 
 
 class ODE1IVP(ODE1):
@@ -71,7 +72,6 @@ class ODE1IVP(ODE1):
         diffeqmod - The name of the Python module containing the problem
         definition.
         """
-        ODE1.__init__(self)
 
         # Initialize all attributes.
         self.name = None

@@ -23,6 +23,7 @@ Methods:
 
 
 from nnde.differentialequation.ode.ode import ODE
+from nnde.exceptions.nndeexception import NNDEException
 
 
 class ODE1(ODE):
@@ -31,7 +32,7 @@ class ODE1(ODE):
 
     def __init__(self):
         """Constructor for ODE1 objects - must be  overridden in subclass."""
-        ODE.__init__(self)
+        raise NNDEException
 
     def G(self, x, Y, dY_dx):
         """Differential equation  to be solved, in the form G() = 0 -
@@ -41,4 +42,4 @@ class ODE1(ODE):
         Y is the value of the solution.
         dY_dx is the value of the 1st derivative of the solution.
         """
-        raise Exception
+        raise NNDEException
