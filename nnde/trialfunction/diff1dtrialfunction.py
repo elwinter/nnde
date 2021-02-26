@@ -47,15 +47,10 @@ Todo:
 """
 
 
-__all__ = []
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
-
-
 from math import cos, pi, sin
 import numpy as np
 
-from nnde.trialfunction import TrialFunction
+from nnde.trialfunction.trialfunction import TrialFunction
 
 
 class Diff1DTrialFunction(TrialFunction):
@@ -161,83 +156,3 @@ class Diff1DTrialFunction(TrialFunction):
         d2Yt_dt2 = d2A_dt2 + P*d2N_dt2 + 2*dP_dt*dN_dt + d2P_dt2*N
         del2Yt = [d2Yt_dx2, d2Yt_dt2]
         return del2Yt
-
-
-if __name__ == '__main__':
-
-    # This is a 2-D problem.
-    m = 2
-
-    # Test boundary conditions
-    bc = [[lambda xt: 0, lambda xt: 0],
-          [lambda xt: sin(pi*xt[0]), None]]
-
-    # Test BC gradient
-    delbc = [[[lambda xt: 0, lambda xt: 0], [lambda xt: 0, lambda xt: 0]],
-             [[lambda xt: pi*cos(pi*xt[0]), lambda xt: 0], [None, None]]]
-
-    # Test BC Laplacian
-    del2bc = [[[lambda xt: 0, lambda xt: 0], [lambda xt: 0, lambda xt: 0]],
-              [[lambda xt: -pi**2*sin(pi*xt[0]), lambda xt: 0], [None, None]]]
-
-    # Test inputs.
-    xt_test = [0.4, 0.41]
-    N_test = 0.5
-    delN_test = [0.61, 0.62]
-    del2N_test = [0.71, 0.72]
-
-    # Reference values for tests.
-    A_ref = 0.5611233446141407
-    delA_ref = (0.572775, -0.951057)
-    del2A_ref = (-5.53807, 0)
-    P_ref = 0.0984
-    delP_ref = (0.082, 0.24)
-    del2P_ref = [-0.82, 0]
-    Yt_ref = 0.610323
-    delYt_ref = [0.673799, -0.770049]
-    del2Yt_ref = [-5.77816, 0.368448]
-
-    # Create a new trial function object.
-    tf = Diff1DTrialFunction(bc, delbc, del2bc)
-
-    print("Testing boundary condition function.")
-    A = tf.A(xt_test)
-    assert np.isclose(A, A_ref)
-
-    print("Testing boundary condition function gradient.")
-    delA = tf.delA(xt_test)
-    for j in range(m):
-        assert np.isclose(delA[j], delA_ref[j])
-
-    print("Testing boundary condition function Laplacian.")
-    del2A = tf.del2A(xt_test)
-    for j in range(m):
-        assert np.isclose(del2A[j], del2A_ref[j])
-
-    print("Testing network coefficient function.")
-    P = tf.P(xt_test)
-    assert np.isclose(P, P_ref)
-
-    print("Testing network coefficient function gradient.")
-    delP = tf.delP(xt_test)
-    for j in range(m):
-        assert np.isclose(delP[j], delP_ref[j])
-
-    print("Testing network coefficient function Laplacian.")
-    del2P = tf.del2P(xt_test)
-    for j in range(m):
-        assert np.isclose(del2P[j], del2P_ref[j])
-
-    print("Testing trial function.")
-    Yt = tf.Yt(xt_test, N_test)
-    assert np.isclose(Yt, Yt_ref)
-
-    print("Testing trial function gradient.")
-    delYt = tf.delYt(xt_test, N_test, delN_test)
-    for j in range(m):
-        assert np.isclose(delYt[j], delYt_ref[j])
-
-    print("Testing trial function Laplacian.")
-    del2Yt = tf.del2Yt(xt_test, N_test, delN_test, del2N_test)
-    for j in range(m):
-        assert np.isclose(del2Yt[j], del2Yt_ref[j])
