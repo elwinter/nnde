@@ -1,16 +1,18 @@
 import unittest
 
 from nnde.differentialequation.differentialequation import DifferentialEquation
+from nnde.exceptions.nndeexception import NNDEException
 
 
 class TestBuilder(unittest.TestCase):
 
     def test___init__(self):
-        DifferentialEquation()
+        with self.assertRaises(NNDEException):
+            DifferentialEquation()
 
     def test_G(self):
-        with self.assertRaises(Exception):
-            DifferentialEquation().G()
+        with self.assertRaises(NNDEException):
+            DifferentialEquation.G(None)
 
 
 if __name__ == '__main__':
