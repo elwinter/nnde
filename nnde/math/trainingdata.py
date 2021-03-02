@@ -63,7 +63,7 @@ def create_training_grid(n) -> list:
     return X
 
 
-def prod(n: int) -> int:
+def prod(n: list) -> int:
     """Compute the product of the elements of a list of numbers."""
     p = 1
     for nn in n:
