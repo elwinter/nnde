@@ -7,10 +7,7 @@ class TestBuilder(unittest.TestCase):
 
     def test___init__(self):
         PDE2DIFF()
-
-    def test_G(self):
-        with self.assertRaises(Exception):
-            PDE2DIFF().G()
+        # ADD CODE TO LOAD FROM MODULE.
 
 
 if __name__ == '__main__':

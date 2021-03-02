@@ -1,11 +1,7 @@
-"""
-PDE2DIFF - Base class for diffusion equations
+"""PDE2DIFF - Base class for diffusion equations
 
 This module provides the base functionality for all 1-, 2-, and 3-D diffusion
 equation objects used in the nnode software.
-
-This class is currently an abstract base class. It must be subclassed
-to be useful.
 
 Example:
     Create an empty PDE2DIFF object.
@@ -14,18 +10,28 @@ Example:
         pde2diff = PDE2DIFF(modname)
 
 The solution is assumed to be a function of m independent variables. In the
-methods below, x is a vector of independent variables, and delY is the
-Jacobian of the solution wrt the independent variables.
+methods below, x is a vector of independent variables, delY is the
+gradient of the solution wrt the independent variables, and del2Y is the
+list of Laplacian components of the solution wrt independent variables.
 
 Attributes:
-    None
+    name
+    G
+    bc
+    delbc
+    del2bc
+    dG_dY
+    dG_ddelY
+    dG_ddel2Y
+    A
+    delA
+    del2A
+    Ya
+    delYa
+    del2Ya
 
 Methods:
-    None
-
-Todo:
-    * Add function annotations.
-    * Add variable annotations.
+    __init__ - Constructor
 """
 
 
@@ -37,8 +43,7 @@ from nnde.differentialequation.pde.pde2 import PDE2
 class PDE2DIFF(PDE2):
     """Base class for all diffusion equation objects"""
 
-    def __init__(self, modname=None):
-        PDE2.__init__(self)
+    def __init__(self, modname: str=None):
         self.name = None
         self.G = None
         self.bc = None
@@ -82,4 +87,3 @@ class PDE2DIFF(PDE2):
                 self.delYa = pdemod.delYa
             if hasattr(pdemod, 'del2Ya'):
                 self.del2Ya = pdemod.del2Ya
-
