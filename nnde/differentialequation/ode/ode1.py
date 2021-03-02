@@ -1,22 +1,16 @@
-"""
-ODE1 - Base class for 1st-order ordinary differential equations
+"""Abstract base class for 1st-order ordinary differential equations
 
-This module provides the base functionality for all 1st-order ordinary
-differential equation objects used in the nnode software.
+This module defines the methods required for all 1st-order ordinary
+differential equation objects used in the nnde software.
 
-This class is currently an abstract base class. It must be subclassed
-to be useful.
-
-Example:
-    Create an empty ODE1 object.
-        ode1 = ODE1()
+This class is an abstract base class. It must be subclassed to be useful. All
+methods in this class will raise NNDEException if called.
 
 Attributes:
     None
 
 Methods:
-    __init__() - Constructor
-    G - Function for differential equation, in the form G() = 0,
+    G() - Function for differential equation, in the form G() = 0,
     where G() is a function of the independent variable x, the solution
     Y(x), and the first derivative dY/x.
 """
@@ -30,13 +24,8 @@ class ODE1(ODE):
     """Abstract base class for all 1st-order ordinary differential
     equation objects"""
 
-    def __init__(self):
-        """Constructor for ODE1 objects - must be  overridden in subclass."""
-        raise NNDEException
-
-    def G(self, x, Y, dY_dx):
-        """Differential equation  to be solved, in the form G() = 0 -
-        must be overridden in subclass.
+    def G(self, x: float, Y: float, dY_dx: float) -> float:
+        """Differential equation  to be solved, in the form G(x, Y, dY_dx) = 0
 
         x is the value of the independent variable.
         Y is the value of the solution.

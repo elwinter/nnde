@@ -1,31 +1,22 @@
-"""
-ODE - Base class for ordinary differential equations
+"""Abstract base class for ordinary differential equations
 
-This module provides the base functionality for all ordinary differential
-equation objects used in the nnde software.
+This module defines the methods required for all ordinary differential equation
+objects used in the nnde software.
 
-This class is currently an abstract base class. It must be subclassed
-to be useful.
-
-Example:
-    Create an empty ODE object.
-        ode = ODE()
+This class is an abstract base class. It must be subclassed to be useful. All
+methods in this class will raise NNDEException if called.
 
 Attributes:
     None
 
 Methods:
-    __init__() - Constructor
+    None
 """
 
 
 from nnde.differentialequation.differentialequation import DifferentialEquation
-from nnde.exceptions.nndeexception import NNDEException
 
 
 class ODE(DifferentialEquation):
     """Abstract base class for all ordinary differential equation objects"""
-
-    def __init__(self):
-        """Constructor for ODE objects - must be  overridden in subclass."""
-        raise NNDEException
+    pass

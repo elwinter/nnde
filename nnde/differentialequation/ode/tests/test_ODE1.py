@@ -10,6 +10,10 @@ class TestBuilder(unittest.TestCase):
         with self.assertRaises(NNDEException):
             ODE1()
 
+    def test_G(self):
+        with self.assertRaises(NNDEException):
+            ODE1.G(None, 0, 0, 0)
+
 
 if __name__ == '__main__':
     unittest.main()

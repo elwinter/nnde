@@ -1,10 +1,8 @@
-"""
-ODE1IVP - Base class for 1st-order ordinary differential equation initial-
+"""Base class for 1st-order ordinary differential equation initial-
 value problems
 
-This module provides the base functionality for all 1st-order ordinary
-differential equation initial-value problem objects used in the nnde
-software.
+This module defines the methods required for all 1st-order ordinary
+differential equation initil value problem objects used in the nnde software.
 
 This class is typically used to create an object from the contents of an
 appropriately-designed Python module. The module must define all of the
@@ -48,10 +46,6 @@ Attributes:
 
 Methods:
     __init__() - Constructor
-
-Todo:
-    * Add function annotations.
-    * Add variable annotations.
 """
 
 
@@ -65,12 +59,12 @@ class ODE1IVP(ODE1):
     """Base class for all 1st-order ordinary differential equation initial-
     value problem objects"""
 
-    def __init__(self, diffeqmod=None):
+    def __init__(self, diffeqmod: str=None):
         """Constructor for ODE1IVP objects
 
         Parameters:
         diffeqmod - The name of the Python module containing the problem
-        definition.
+        definition (optional).
         """
 
         # Initialize all attributes.
