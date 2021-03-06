@@ -1,5 +1,4 @@
-"""
-NNODE1IVP - Class to solve 1st-order ordinary differential equation
+"""Class to solve 1st-order ordinary differential equation
 initial value problems using a neural network
 
 This module provides the functionality to solve 1st-order ordinary
@@ -41,19 +40,14 @@ Todo:
 """
 
 
-__all__ = []
-__version__ = '0.0'
-__author__ = 'Eric Winter (ewinter@stsci.edu)'
-
-
 from math import sqrt
 import numpy as np
 from scipy.optimize import minimize
 
-from nnde.ode1ivp import ODE1IVP
-from nnde import sigma
-from nnde.slffnn import SLFFNN
-from nnde.trainingdata import create_training_grid
+from nnde.differentialequation.ode.ode1ivp import ODE1IVP
+import nnde.math.sigma as sigma
+from nnde.neuralnetwork.slffnn import SLFFNN
+from nnde.math.trainingdata import create_training_grid
 
 
 # Default values for method parameters
@@ -101,7 +95,6 @@ class NNODE1IVP(SLFFNN):
         eq is an ODE1IVP object describing the equation to solve.
         nhid is the number of hidden nodes to use in the network
         (default is DEFAULT_NHID)."""
-        super().__init__()
 
         # Save the differential equation object.
         self.eq = eq
@@ -162,36 +155,6 @@ class NNODE1IVP(SLFFNN):
 
         return Yt
 
-    def run_debug(self, x):
-        """Compute the trained solution for each value in the
-        array x (debug version)."""
-        n = len(x)
-        H = len(self.v)
-        w = self.w
-        u = self.u
-        v = self.v
-
-        z = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                z[i, k] = w[k]*x[i] + u[k]
-
-        s = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                s[i, k] = sigma.s(z[i, k])
-
-        N = np.zeros(n)
-        for i in range(n):
-            for k in range(H):
-                N[i] += s[i, k]*v[k]
-
-        Yt = np.zeros(n)
-        for i in range(n):
-            Yt[i] = self._Yt(x[i], N[i])
-
-        return Yt
-
     def run_derivative(self, x):
         """Compute the trained 1st derivative of the solution
         for each value in the array x."""
@@ -205,46 +168,6 @@ class NNODE1IVP(SLFFNN):
         N = s.dot(v)
         dN_dx = s1.dot(v*w)
         dYt_dx = self.dYt_dx_v(x, N, dN_dx)
-
-        return dYt_dx
-
-    def run_derivative_debug(self, x):
-        """Compute the trained 1st derivative of the solution
-        for each value in the array x (debug version)."""
-        n = len(x)
-        H = len(self.v)
-        w = self.w
-        u = self.u
-        v = self.v
-
-        z = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                z[i, k] = w[k]*x[i] + u[k]
-
-        s = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                s[i, k] = sigma.s(z[i, k])
-
-        s1 = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                s1[i, k] = sigma.s1(s[i, k])
-
-        N = np.zeros(n)
-        for i in range(n):
-            for k in range(H):
-                N[i] += s[i, k]*v[k]
-
-        dN_dx = np.zeros(n)
-        for i in range(n):
-            for k in range(H):
-                dN_dx[i] += v[k]*s1[i, k]*w[k]
-
-        dYt_dx = np.zeros(n)
-        for i in range(n):
-            dYt_dx[i] = self._dYt_dx(x[i], N[i], dN_dx[i])
 
         return dYt_dx
 
@@ -375,228 +298,6 @@ class NNODE1IVP(SLFFNN):
         self.u = u
         self.v = v
 
-    def _train_delta_debug(self, x, opts=DEFAULT_OPTS):
-        """Train using the delta method (debug version). """
-
-        my_opts = dict(DEFAULT_OPTS)
-        my_opts.update(opts)
-
-        # Sanity-check arguments.
-        assert len(x) > 0
-        assert opts['maxepochs'] > 0
-        assert opts['eta'] > 0
-        assert opts['vmin'] < opts['vmax']
-        assert opts['wmin'] < opts['wmax']
-        assert opts['umin'] < opts['umax']
-
-        # Determine the number of training points, and change notation for
-        # convenience.
-        n = len(x)  # Number of training points
-        H = len(self.v)
-        debug = my_opts['debug']
-        verbose = my_opts['verbose']
-        eta = my_opts['eta']  # Learning rate
-        maxepochs = my_opts['maxepochs']  # Number of training epochs
-        wmin = my_opts['wmin']  # Network parameter limits
-        wmax = my_opts['wmax']
-        umin = my_opts['umin']
-        umax = my_opts['umax']
-        vmin = my_opts['vmin']
-        vmax = my_opts['vmax']
-
-        # Create the hidden node weights, biases, and output node weights.
-        w = np.random.uniform(wmin, wmax, H)
-        u = np.random.uniform(umin, umax, H)
-        v = np.random.uniform(vmin, vmax, H)
-
-        # Initial parameter deltas are 0.
-        dE_dw = np.zeros(H)
-        dE_du = np.zeros(H)
-        dE_dv = np.zeros(H)
-
-        # Train the network.
-        for epoch in range(maxepochs):
-            if debug:
-                print('Starting epoch %d.' % epoch)
-
-            # Compute the new values of the network parameters.
-            for k in range(H):
-                w[k] -= eta*dE_dw[k]
-
-            for k in range(H):
-                u[k] -= eta*dE_du[k]
-
-            for k in range(H):
-                v[k] -= eta*dE_dv[k]
-
-            # Compute the input, the sigmoid function, and its derivatives, for
-            # each hidden node and each training point.
-            z = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    z[i, k] = w[k]*x[i] + u[k]
-
-            s = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    s[i, k] = sigma.s(z[i, k])
-
-            s1 = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    s1[i, k] = sigma.s1(s[i, k])
-
-            s2 = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    s2[i, k] = sigma.s2(s[i, k])
-
-            # Compute the network output and its derivatives, for each
-            # training point.
-            N = np.zeros(n)
-            for i in range(n):
-                for k in range(H):
-                    N[i] += v[k]*s[i, k]
-
-            dN_dx = np.zeros(n)
-            for i in range(n):
-                for k in range(H):
-                    dN_dx[i] += v[k]*s1[i, k]*w[k]
-
-            dN_dw = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    dN_dw[i, k] = v[k]*s1[i, k]*x[i]
-
-            dN_du = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    dN_du[i, k] = v[k]*s1[i, k]
-
-            dN_dv = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    dN_dv[i, k] = s[i, k]
-
-            d2N_dwdx = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    d2N_dwdx[i, k] = v[k]*(s1[i, k] + s2[i, k]*w[k]*x[i])
-
-            d2N_dudx = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    d2N_dudx[i, k] = v[k]*s2[i, k]*w[k]
-
-            d2N_dvdx = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    d2N_dvdx[i, k] = s1[i, k]*w[k]
-
-            # Compute the value of the trial solution and its derivatives,
-            # for each training point.
-            Yt = np.zeros(n)
-            for i in range(n):
-                Yt[i] = self._Yt(x[i], N[i])
-
-            dYt_dx = np.zeros(n)
-            for i in range(n):
-                dYt_dx[i] = self._dYt_dx(x[i], N[i], dN_dx[i])
-
-            dYt_dw = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    dYt_dw[i, k] = x[i]*dN_dw[i, k]
-
-            dYt_du = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    dYt_du[i, k] = x[i]*dN_du[i, k]
-
-            dYt_dv = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    dYt_dv[i, k] = x[i]*dN_dv[i, k]
-
-            d2Yt_dwdx = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    d2Yt_dwdx[i, k] = x[i]*d2N_dwdx[i, k] + dN_dw[i, k]
-
-            d2Yt_dudx = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    d2Yt_dudx[i, k] = x[i]*d2N_dudx[i, k] + dN_du[i, k]
-
-            d2Yt_dvdx = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    d2Yt_dvdx[i, k] = x[i]*d2N_dvdx[i, k] + dN_dv[i, k]
-
-            # Compute the value of the original differential equation for
-            # each training point, and its derivatives.
-            G = np.zeros(n)
-            for i in range(n):
-                G[i] = self.eq.G(x[i], Yt[i], dYt_dx[i])
-
-            dG_dYt = np.zeros(n)
-            for i in range(n):
-                dG_dYt[i] = self.eq.dG_dY(x[i], Yt[i], dYt_dx[i])
-
-            dG_dYtdx = np.zeros(n)
-            for i in range(n):
-                dG_dYtdx[i] = self.eq.dG_ddYdx(x[i], Yt[i], dYt_dx[i])
-
-            dG_dw = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    dG_dw[i, k] = dG_dYt[i]*dYt_dw[i, k] + \
-                                  dG_dYtdx[i]*d2Yt_dwdx[i, k]
-
-            dG_du = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    dG_du[i, k] = dG_dYt[i]*dYt_du[i, k] + \
-                                  dG_dYtdx[i]*d2Yt_dudx[i, k]
-
-            dG_dv = np.zeros((n, H))
-            for i in range(n):
-                for k in range(H):
-                    dG_dv[i, k] = dG_dYt[i]*dYt_dv[i, k] + \
-                                  dG_dYtdx[i]*d2Yt_dvdx[i, k]
-
-            # Compute the error function for this epoch.
-            E = 0
-            for i in range(n):
-                E += G[i]**2
-
-            # Compute the partial derivatives of the error with respect to the
-            # network parameters.
-            dE_dw = np.zeros(H)
-            for k in range(H):
-                for i in range(n):
-                    dE_dw[k] += 2*G[i]*dG_dw[i, k]
-
-            dE_du = np.zeros(H)
-            for k in range(H):
-                for i in range(n):
-                    dE_du[k] += 2*G[i]*dG_du[i, k]
-
-            dE_dv = np.zeros(H)
-            for k in range(H):
-                for i in range(n):
-                    dE_dv[k] += 2*G[i]*dG_dv[i, k]
-
-            # Compute the RMS error for this epoch.
-            rmse = sqrt(E/n)
-            if verbose:
-                print(epoch, rmse)
-
-        # Save the optimized parameters.
-        self.w = w
-        self.u = u
-        self.v = v
-
     def _train_minimize(self, x, trainalg, opts=DEFAULT_OPTS):
         """Train the network using the SciPy minimize() function. """
 
@@ -663,53 +364,6 @@ class NNODE1IVP(SLFFNN):
         dYt_dx = self.dYt_dx_v(x, N, dN_dx)
         G = self.G_v(x, Yt, dYt_dx)
         E = np.sum(G**2)
-
-        return E
-
-    def _compute_error_debug(self, p, x):
-        """Compute the error function using the current parameter values
-        (debug version)."""
-
-        # Fetch the number of training points.
-        n = len(x)
-
-        # Unpack the network parameters.
-        H = len(self.v)
-        (w, u, v) = np.hsplit(p, 3)
-
-        # Compute the forward pass through the network.
-        z = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                z[i, k] = x[i]*w[k] + u[k]
-        s = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                s[i, k] = sigma.s(z[i, k])
-        s1 = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                s1[i, k] = sigma.s1(s[i, k])
-        N = np.zeros(n)
-        for i in range(n):
-            for k in range(H):
-                N[i] += v[k]*s[i, k]
-        dN_dx = np.zeros(n)
-        for i in range(n):
-            for k in range(H):
-                dN_dx[i] += s1[i, k]*v[k]*w[k]
-        Yt = np.zeros(n)
-        for i in range(n):
-            Yt[i] = self._Yt(x[i], N[i])
-        dYt_dx = np.zeros(n)
-        for i in range(n):
-            dYt_dx[i] = self._dYt_dx(x[i], N[i], dN_dx[i])
-        G = np.zeros(n)
-        for i in range(n):
-            G[i] = self.eq.G(x[i], Yt[i], dYt_dx[i])
-        E = 0
-        for i in range(n):
-            E += G[i]**2
 
         return E
 
@@ -793,172 +447,6 @@ class NNODE1IVP(SLFFNN):
 
         return jac
 
-    def _compute_error_gradient_debug(self, p, x):
-        """Compute the gradient of the error function wrt network
-        parameters (debug version)."""
-
-        # Fetch the number of training points.
-        n = len(x)
-
-        # Unpack the network parameters (hsplit() returns views, so no copies
-        # made).
-        H = len(self.v)
-        (w, u, v) = np.hsplit(p, 3)
-
-        # Compute the forward pass through the network.
-        z = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                z[i, k] = x[i]*w[k] + u[k]
-
-        s = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                s[i, k] = sigma.s(z[i, k])
-
-        s1 = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                s1[i, k] = sigma.s1(s[i, k])
-
-        s2 = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                s2[i, k] = sigma.s2(s[i, k])
-
-        N = np.zeros(n)
-        for i in range(n):
-            for k in range(H):
-                N[i] += v[k]*s[i, k]
-
-        dN_dx = np.zeros(n)
-        for i in range(n):
-            for k in range(H):
-                dN_dx[i] += s1[i, k]*v[k]*w[k]
-
-        dN_dw = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                dN_dw[i, k] = s1[i, k]*x[i]*v[k]
-
-        dN_du = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                dN_du[i, k] = s1[i, k]*v[k]
-
-        dN_dv = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                dN_dv[i, k] = s[i, k]
-
-        d2N_dwdx = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                d2N_dwdx[i, k] = v[k]*(s1[i, k] + s2[i, k]*x[i]*w[k])
-
-        d2N_dudx = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                d2N_dudx[i, k] = v[k]*s2[i, k]*w[k]
-
-        d2N_dvdx = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                d2N_dvdx[i, k] = s1[i, k]*w[k]
-
-        Yt = np.zeros(n)
-        for i in range(n):
-            Yt[i] = self._Yt(x[i], N[i])
-
-        dYt_dx = np.zeros(n)
-        for i in range(n):
-            dYt_dx[i] = self._dYt_dx(x[i], N[i], dN_dx[i])
-
-        dYt_dw = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                dYt_dw[i, k] = x[i]*dN_dw[i, k]
-
-        dYt_du = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                dYt_du[i, k] = x[i]*dN_du[i, k]
-
-        dYt_dv = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                dYt_dv[i, k] = x[i]*dN_dv[i, k]
-
-        d2Yt_dwdx = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                d2Yt_dwdx[i, k] = x[i]*d2N_dwdx[i, k] + dN_dw[i, k]
-
-        d2Yt_dudx = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                d2Yt_dudx[i, k] = x[i]*d2N_dudx[i, k] + dN_du[i, k]
-
-        d2Yt_dvdx = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                d2Yt_dvdx[i, k] = x[i]*d2N_dvdx[i, k] + dN_dv[i, k]
-
-        G = np.zeros(n)
-        for i in range(n):
-            G[i] = self.eq.G(x[i], Yt[i], dYt_dx[i])
-
-        dG_dYt = np.zeros(n)
-        for i in range(n):
-            dG_dYt[i] = self.eq.dG_dY(x[i], Yt[i], dYt_dx[i])
-
-        dG_ddYtdx = np.zeros(n)
-        for i in range(n):
-            dG_ddYtdx[i] = self.eq.dG_ddYdx(x[i], Yt[i], dYt_dx[i])
-
-        dG_dw = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                dG_dw[i, k] = (dG_dYt[i]*dYt_dw[i, k]
-                               + dG_ddYtdx[i]*d2Yt_dwdx[i, k])
-
-        dG_du = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                dG_du[i, k] = (dG_dYt[i]*dYt_du[i, k]
-                               + dG_ddYtdx[i]*d2Yt_dudx[i, k])
-
-        dG_dv = np.zeros((n, H))
-        for i in range(n):
-            for k in range(H):
-                dG_dv[i, k] = (dG_dYt[i]*dYt_dv[i, k]
-                               + dG_ddYtdx[i]*d2Yt_dvdx[i, k])
-
-        dE_dw = np.zeros(H)
-        for k in range(H):
-            for i in range(n):
-                dE_dw[k] += 2*G[i]*dG_dw[i, k]
-
-        dE_du = np.zeros(H)
-        for k in range(H):
-            for i in range(n):
-                dE_du[k] += 2*G[i]*dG_du[i, k]
-
-        dE_dv = np.zeros(H)
-        for k in range(H):
-            for i in range(n):
-                dE_dv[k] += 2*G[i]*dG_dv[i, k]
-
-        jac = np.zeros(3*H)
-        for j in range(H):
-            jac[j] = dE_dw[j]
-        for j in range(H):
-            jac[H + j] = dE_du[j]
-        for j in range(H):
-            jac[2*H + j] = dE_dv[j]
-
-        return jac
-
     def _print_progress(self, xk):
         """Callback to print progress message from optimizer"""
         print('nit =', self.nit)
@@ -969,7 +457,7 @@ class NNODE1IVP(SLFFNN):
 if __name__ == '__main__':
 
     # Create training data.
-    nx = 10
+    nx = 11
     x_train = np.array(create_training_grid(nx))
     print('The training points are:\n', x_train)
 
@@ -980,7 +468,10 @@ if __name__ == '__main__':
     training_opts['maxepochs'] = 1000
 
     # Test each training algorithm on each equation.
-    for eq in ('eq.lagaris_01', 'eq.lagaris_02',):
+    for eq in (
+        'nnde.differentialequation.examples.lagaris_01',
+        'nnde.differentialequation.examples.lagaris_02',
+    ):
         print('Examining %s.' % eq)
         ode1ivp = ODE1IVP(eq)
         print(ode1ivp)
