@@ -60,11 +60,3 @@ def Ya(x):
 def dYa_dx(x):
     """1st derivative of analytical solution"""
     return 1/5*exp(-x/5)*(5*cos(x) - sin(x))
-
-
-if __name__ == '__main__':
-    assert G(0, 0, 0) == -1
-    assert dG_dY(0, 0, 0) == 1/5
-    assert dG_ddYdx(0, 0, 0) == 1
-    assert np.isclose(Ya(0), ic)
-    assert np.isclose(dYa_dx(0), 1)
