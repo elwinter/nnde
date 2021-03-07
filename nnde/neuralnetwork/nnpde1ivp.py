@@ -37,11 +37,11 @@ from math import sqrt
 import numpy as np
 from scipy.optimize import minimize
 
-from nnde.kdelta import kdelta
-from nnde.pde1ivp import PDE1IVP
-import nnde.sigma as sigma
-from nnde.slffnn import SLFFNN
-from nnde.trainingdata import create_training_grid
+from nnde.math.kdelta import kdelta
+from nnde.differentialequation.pde.pde1ivp import PDE1IVP
+import nnde.math.sigma as sigma
+from nnde.neuralnetwork.slffnn import SLFFNN
+from nnde.math.trainingdata import create_training_grid
 
 
 # Default values for method parameters
@@ -391,7 +391,7 @@ class NNPDE1IVP(SLFFNN):
             # Compute the value of the trial solution, its coefficients,
             # and derivatives, for each training point.
             Yt = self.Yt_v(x, N)
-            RESUME HERE
+            #RESUME HERE
             delYt = self.dYt_dx_v(x, N, dN_dx)
 #             # Temporary broadcast version of x.
 #             x_b = np.broadcast_to(x, (H, n)).T
