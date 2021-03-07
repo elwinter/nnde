@@ -71,11 +71,3 @@ def Ya(x):
 def dYa_dx(x):
     """1st derivative of analytical solution"""
     return 2*x - exp(-x**2/2)*(1 + x + 4*x**2 + x**4)/(1 + x + x**3)**2
-
-
-if __name__ == '__main__':
-    assert G(0, 0, 0) == 0
-    assert dG_dY(0, 0, 0) == 1
-    assert dG_ddYdx(0, 0, 0) == 1
-    assert np.isclose(Ya(0), ic)
-    assert np.isclose(dYa_dx(0), -1)
