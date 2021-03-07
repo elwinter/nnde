@@ -6,6 +6,7 @@ neural networks.
 Packages
 --------
 differentialequation
+exceptions
 math
 neuralnetwork
 trialfunction
