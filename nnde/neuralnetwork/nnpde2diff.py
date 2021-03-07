@@ -34,11 +34,6 @@ Todo:
 """
 
 
-__all__ = []
-__version__ = "0.0"
-__author__ = "Eric Winter (ewinter@stsci.edu)"
-
-
 from math import sqrt
 import numpy as np
 from scipy.optimize import minimize
@@ -94,7 +89,6 @@ class NNPDE2DIFF(SLFFNN):
     """Solve a diffusion problem with a neural network"""
 
     def __init__(self, eq, nhid=DEFAULT_NHID):
-        super().__init__()
 
         # Save the differential equation object.
         self.eq = eq
@@ -850,7 +844,7 @@ if __name__ == "__main__":
     H = 5
 
     # Test each training algorithm on each equation.
-    for pde in ("eq.diff1d_halfsine",):
+    for pde in ("nnde.differentialequation.examples.diff1d_halfsine",):
         print("Examining %s." % pde)
 
         # Read the equation definition.
