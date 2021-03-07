@@ -1,5 +1,4 @@
-"""
-TrialFunction - Base class for trial functions
+"""Base class for trial functions
 
 This module provides the base functionality for all trial function objects
 used in the nnde software.
@@ -17,19 +16,11 @@ Attributes:
 Methods:
     Yt(x, N) - Evaluate the trial function given coordinate vector x and
     scalar network output N
-
-Todo:
-    * Add function annotations.
-    * Add variable annotations.
 """
 
 
 class TrialFunction():
     """Trial function base class"""
-
-    def __init__(self):
-        """Constructor"""
-        pass
 
     def Yt(self, x, N):
         """Trial function"""
