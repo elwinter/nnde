@@ -290,7 +290,7 @@ class NNODE1IVP(SLFFNN):
 
             # Compute RMS error for this epoch.
             rmse = sqrt(E/n)
-            if verbose:
+            if debug:
                 print(epoch, rmse)
 
         # Save the optimized parameters.
@@ -330,7 +330,7 @@ class NNODE1IVP(SLFFNN):
 
         # Add the status callback if requested.
         callback = None
-        if my_opts['verbose']:
+        if my_opts['debug']:
             callback = self._print_progress
 
         # Minimize the error function to get the new parameter values.

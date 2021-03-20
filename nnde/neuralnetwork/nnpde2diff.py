@@ -130,6 +130,10 @@ class NNPDE2DIFF(SLFFNN):
         # Create the parameter history array.
         self.phist = np.hstack((self.w.flatten(), self.u, self.v))
 
+        # Initialize flags.
+        self._debug = False
+        self._verbose = False
+
     def train(self, x, trainalg=DEFAULT_TRAINALG, opts=DEFAULT_OPTS):
         """Train the network to solve a 2-D diffusion problem"""
         my_opts = dict(DEFAULT_OPTS)
@@ -397,7 +401,7 @@ class NNPDE2DIFF(SLFFNN):
 
             # Compute the error function for this epoch.
             E2 = np.sum(G**2)
-            if verbose:
+            if debug:
                 rmse = sqrt(E2/n)
                 print(epoch, rmse)
 
@@ -454,6 +458,7 @@ class NNPDE2DIFF(SLFFNN):
 
         # Set up the iteration callback.
         callback = self._iteration_callback
+        self._debug = my_opts["debug"]
         self._verbose = my_opts["verbose"]
 
         # Use the error jacobian if requested.
@@ -815,7 +820,7 @@ class NNPDE2DIFF(SLFFNN):
 
     def _iteration_callback(self, xk):
         """Callback after each optimizer iteration"""
-        if self._verbose:
+        if self._debug:
             print("nit =", self.nit)
         self.nit += 1
 
