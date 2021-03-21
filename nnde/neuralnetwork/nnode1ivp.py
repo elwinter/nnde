@@ -110,6 +110,13 @@ class NNODE1IVP(SLFFNN):
         # Initialize iteration counter.
         self.nit = 0
 
+        # Create the parameter history array.
+        self.phist = np.hstack((self.w.flatten(), self.u, self.v))
+
+        # Initialize flags.
+        self._debug = False
+        self._verbose = False
+
         # Pre-vectorize (_v suffix) functions for efficiency.
         self.G_v = np.vectorize(self.eq.G)
         self.dG_dY_v = np.vectorize(self.eq.dG_dY)
@@ -230,6 +237,11 @@ class NNODE1IVP(SLFFNN):
             u -= eta*dE_du
             v -= eta*dE_dv
 
+            # Log the current parameter values.
+            self.phist = (
+                np.vstack((self.phist, np.hstack((w.flatten(), u, v))))
+            )
+
             # Compute the input, the sigmoid function, and its derivatives, for
             # each hidden node and training point.
             # x is nx1, w, u are 1xH
@@ -328,10 +340,10 @@ class NNODE1IVP(SLFFNN):
         # use by the minimize() method.
         p = np.hstack((w, u, v))
 
-        # Add the status callback if requested.
-        callback = None
-        if my_opts['debug']:
-            callback = self._print_progress
+        # Add the status callback.
+        callback = self._iteration_callback
+        self._debug = my_opts["debug"]
+        self._verbose = my_opts["verbose"]
 
         # Minimize the error function to get the new parameter values.
         if trainalg in ('Nelder-Mead', 'Powell', 'CG', 'BFGS'):
@@ -447,8 +459,11 @@ class NNODE1IVP(SLFFNN):
 
         return jac
 
-    def _print_progress(self, xk):
-        """Callback to print progress message from optimizer"""
-        print('nit =', self.nit)
+    def _iteration_callback(self, xk):
+        """Callback after each optimizer iteration"""
+        if self._debug:
+            print("nit =", self.nit)
         self.nit += 1
-        print('xk =', xk)
+
+        # Log the current parameters.
+        self.phist = np.vstack((self.phist, xk))
