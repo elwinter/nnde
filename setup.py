@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="nnde",
-    version="0.0.6",
+    version="0.0.7",
     author="Eric Winter",
     author_email="eric.winter62@gmail.com",
     description=("A package implementing a collection of neural networks to"
