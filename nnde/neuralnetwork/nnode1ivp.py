@@ -110,6 +110,9 @@ class NNODE1IVP(SLFFNN):
         # Initialize iteration counter.
         self.nit = 0
 
+        # Create the loss function history array.
+        self.losses = []
+
         # Create the parameter history array.
         self.phist = np.hstack((self.w.flatten(), self.u, self.v))
 
@@ -291,6 +294,7 @@ class NNODE1IVP(SLFFNN):
 
             # Compute the error function for this epoch.
             E = np.sum(G**2)
+            self.losses.append(E)
 
             # Compute the partial derivatives of the error with respect to the
             # network parameters.
@@ -376,6 +380,7 @@ class NNODE1IVP(SLFFNN):
         dYt_dx = self.dYt_dx_v(x, N, dN_dx)
         G = self.G_v(x, Yt, dYt_dx)
         E = np.sum(G**2)
+        self.losses.append(E)
 
         return E
 
