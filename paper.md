@@ -48,7 +48,7 @@ $$\psi_a(x,y,t) = e^{-2\pi^2 D t} \sin(\pi x) \sin(\pi y)$$
 
 The `nnde` package was used to create a neural network with a single hidden layer and 10 hidden nodes and trained to solve this problem. The error in the trained solution for the case of $D=0.1$ is shown as a function of time in \autoref{fig:diff2d_error}.
 
-![Difference between the trained neural network solution $\psi_t(x,y,t)$ and the analytical solution $\psi_a(x,y,t)$ of the diffusion problem in 2 spatial dimensions using `nnde` with 10 nodes.\label{fig:diff2d_error}](figures/Y_e.png)
+![Difference between the trained neural network solution $\psi_t(x,y,t)$ and the analytical solution $\psi_a(x,y,t)$ of the diffusion problem in 2 spatial dimensions using `nnde` with 10 nodes.\label{fig:diff2d_error}](https://raw.githubusercontent.com/elwinter/nnde_joss_paper/main/figures/Y_e.png)
 
 # Software repository
 
