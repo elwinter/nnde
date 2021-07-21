@@ -21,6 +21,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-    tests_require=['nose'],
+    tests_require=['nose', 'unittest'],
     test_suite='nose.collector',
+    install_requires=['importlib', 'math', 'numpy', 'scipy']
 )
