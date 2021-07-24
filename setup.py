@@ -21,5 +21,5 @@ setuptools.setup(
     python_requires='>=3.6',
     tests_require=['nose'],
     test_suite='nose.collector',
-    install_requires=['numpy', 'scipy']
+    install_requires=['matplotlib', 'numpy', 'scipy']
 )
