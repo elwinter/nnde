@@ -1,0 +1,5 @@
+The data for this figure are from the run:
+
+20201112/diff2d_halfsine/H=10/11x11x11
+
+The script to generate this figure is a hacked-down version of the standard make_plots.py script in the run directory.
