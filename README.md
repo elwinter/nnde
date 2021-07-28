@@ -28,7 +28,6 @@ python setup.py test
 
 # Contact
 
-Submit bug reports and feature requests on the [repository issue
-tracker](https://github.com/elwinter/nnde/issues>).
+Submit bug reports and feature requests on the [repository issue tracker](https://github.com/elwinter/nnde/issues).
 
 Eric Winter <eric.winter62@gmail.com>
