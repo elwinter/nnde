@@ -23,10 +23,11 @@ cd nnde_demos; python lagaris01_demo.py
 git clone https://github.com/elwinter/nnde
 cd nnde
 pip install -e .
-python setup.py test
+python setup.py test  # Deprecated
+pytest  # Preferred
 ```
 
-# An Overview of nnde
+# An overview of nnde
 
 The nnde package was developed as a tool to help understand how neural networks can be used to solve differential equations. The effort was originally inspired by work done in the 1990s showing how feedforward neural networks could be used as universal approximators. That work led to efforts to show how neural networks could be applied to differential equations. A good example of this technique can be found in Lagaris et al (1993).
 
@@ -60,6 +61,12 @@ The neuralnetwork package provides the core of the nnde functionality. Each modu
 The trialfunction package provides a previously-unavailable capability: determine the structure of the boundary condition component of the trial solution automatically. The algorithm for determining the form of this component of the trial solution is recursive, and the number of terms grows rapidly as the dimensionality of the problem is increased. However, if the user provides the boundary conditions (as another set of functions), these modules can automatically construct the boundary condition term, greatly easing the problem definition burden on the user. The modules also provide the option to short-circuit this process by allowing the user to define an optimized form of the boundary condition function that can greatly reduce the required amount of computation. Trial function classes are provided for diffusion problems in 1, 2, and 3 spatial dimensions. The code which solves 1st-order ODE IVP uses a trivial form of the boundary condition component (a constant), and therefore its use is coded directly, without a separate class.
 
 A Jupyter notebook (tutorial.ipynb) providing a structured walkthrough of the process of defining and solving a problem using the nnde package is available in the examples directory.
+
+# Contribute
+
+If you discover bugs in the nnde package, please create an issue at the project repository on GitHub at https://github.com/elwinter/nnde.
+
+If you find the nnde package useful, we welcome your contributions of code and documentation. To contribute, fork the repository on GitHub, and submit a pull request at https://github.com/elwinter/nnde.
 
 # Contact
 
