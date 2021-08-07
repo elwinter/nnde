@@ -1,10 +1,14 @@
-"""Abstract base class for differential equations
+"""Abstract base class for differential equations.
 
-This module defines the methods required for all differential equation
-objects used in the nnde software.
+Deprecation Warning
+-------------------
+None
 
-This class is an abstract base class. It must be subclassed to be useful. All
-methods in this class will raise NNDEException if called.
+Extended Summary
+----------------
+This module defines the DifferentialEquation, which is an abstract
+class defining methods by for all differential equation classes used
+in the nnde package.
 
 Attributes
 ----------
