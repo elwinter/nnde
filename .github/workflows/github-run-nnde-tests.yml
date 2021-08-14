@@ -13,8 +13,11 @@ jobs:
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: Install pytest to run the tests.
         run:
-          pip install pytest numpy scipy
-      - name: Run the tests.
+          pip install pytest numpy scipy tox
+      - name: Run the pytest tests.
         run:
           pytest
+      - name: Run the tox tests.
+        run:
+          tox
       - run: echo "🍏 This job's status is ${{ job.status }}."
