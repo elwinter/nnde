@@ -387,6 +387,7 @@ def dG_dY(xt, Y, delY, del2Y):
     return 0
 
 
+# NOTE: Should be named dG_ddY_dx() but that name will not import!
 def dG_dY_dx(xt, Y, delY, del2Y):
     """1st derivative of G wrt dY/dx.
 
@@ -411,6 +412,7 @@ def dG_dY_dx(xt, Y, delY, del2Y):
     return 0
 
 
+# NOTE: Should be named dG_ddY_dt() but that name will not import!
 def dG_dY_dt(xt, Y, delY, del2Y):
     """1st derivative of G wrt dY/dt.
 
@@ -439,6 +441,7 @@ def dG_dY_dt(xt, Y, delY, del2Y):
 dG_ddelY = [dG_dY_dx, dG_dY_dt]
 
 
+# NOTE: Should be named dG_dd2Y_dx2() but that name will not import!
 def dG_d2Y_dx2(xt, Y, delY, del2Y):
     """1st derivative of G wrt d2Y/dx2.
 
@@ -463,6 +466,7 @@ def dG_d2Y_dx2(xt, Y, delY, del2Y):
     return -D
 
 
+# NOTE: Should be named dG_dd2Y_dt2() but that name will not import!
 def dG_d2Y_dt2(xt, Y, delY, del2Y):
     """1st derivative of G wrt d2Y/dt2.
 

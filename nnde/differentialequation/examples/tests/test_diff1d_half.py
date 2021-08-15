@@ -11,10 +11,11 @@ from nnde.differentialequation.examples.diff1d_half import (
     f0, f1, Y0, bc,
     df0_dx, df0_dt, df1_dx, df1_dt, dY0_dx, dY0_dt, delbc,
     d2f0_dx2, d2f0_dt2, d2f1_dx2, d2f1_dt2, d2Y0_dx2, d2Y0_dt2, del2bc,
-    dG_dY, dG_dY_dx, dG_dY_dt, dG_ddelY,
+    dG_dY,
+    dG_dY_dx, dG_dY_dt, dG_ddelY,
     dG_d2Y_dx2, dG_d2Y_dt2, dG_ddel2Y,
     A, delA, del2A,
-    Ya, dYa_dx, dYa_dt, delYa, d2Ya_dx2, d2Ya_dt2, del2Ya
+    Ya, dYa_dx, dYa_dt, delYa, d2Ya_dx2, d2Ya_dt2, del2Ya,
 )
 
 
@@ -43,7 +44,7 @@ class TestBuilder(unittest.TestCase):
 
     def test_f0(self):
         """Test boundary condition at (x, t) = (0, t)."""
-        f0_ref = C
+        f0_ref = C  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # x is ignored
@@ -51,7 +52,7 @@ class TestBuilder(unittest.TestCase):
 
     def test_f1(self):
         """Test boundary condition at (x, t) = (1, t)."""
-        f1_ref = C
+        f1_ref = C  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # x is ignored
@@ -59,7 +60,7 @@ class TestBuilder(unittest.TestCase):
 
     def test_Y0(self):
         """Test boundary condition at (x, t) = (x, 0)."""
-        Y0_ref = C
+        Y0_ref = C  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # t is ignored
@@ -74,7 +75,7 @@ class TestBuilder(unittest.TestCase):
 
     def test_df0_dx(self):
         """Test the first derivative of f0 wrt x."""
-        df0_dx_ref = 0
+        df0_dx_ref = 0  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # x is ignored
@@ -82,7 +83,7 @@ class TestBuilder(unittest.TestCase):
 
     def test_df0_dt(self):
         """Test the first derivative of f0 wrt t."""
-        df0_dt_ref = 0
+        df0_dt_ref = 0  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # x is ignored
@@ -90,7 +91,7 @@ class TestBuilder(unittest.TestCase):
 
     def test_df1_dx(self):
         """Test the first derivative of f1 wrt x."""
-        df1_dx_ref = 0
+        df1_dx_ref = 0  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # x is ignored
@@ -98,7 +99,7 @@ class TestBuilder(unittest.TestCase):
 
     def test_df1_dt(self):
         """Test the first derivative of f1 wrt t."""
-        df1_dt_ref = 0
+        df1_dt_ref = 0  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # x is ignored
@@ -106,7 +107,7 @@ class TestBuilder(unittest.TestCase):
 
     def test_dY0_dx(self):
         """Test the first derivative of Y0 wrt x."""
-        dY0_dx_ref = 0
+        dY0_dx_ref = 0  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # t is ignored
@@ -114,24 +115,24 @@ class TestBuilder(unittest.TestCase):
 
     def test_dY0_dt(self):
         """Test the first derivative of Y0 wrt t."""
-        dY0_dt_ref = 0
+        dY0_dt_ref = 0  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # t is ignored
                 self.assertAlmostEqual(dY0_dt(xt), dY0_dt_ref)
 
     def test_delbc(self):
-        """Test the boundary condition gradients are continuous at corners."""
-        xt = (0, 0)
-        for k in range(2):
-            self.assertAlmostEqual(delbc[0][0][k](xt), delbc[1][0][k](xt))
-        xt = (1, 0)
-        for k in range(2):
-            self.assertAlmostEqual(delbc[0][1][k](xt), delbc[1][0][k](xt))
+        """Test the boundary condition gradient function array."""
+        self.assertIs(delbc[0][0][0], df0_dx)
+        self.assertIs(delbc[0][0][1], df0_dt)
+        self.assertIs(delbc[0][1][0], df1_dx)
+        self.assertIs(delbc[0][1][1], df1_dt)
+        self.assertIs(delbc[1][0][0], dY0_dx)
+        self.assertIs(delbc[1][0][1], dY0_dt)
 
     def test_d2f0_dx2(self):
         """Test the second derivative of f0 wrt x."""
-        d2f0_dx2_ref = 0
+        d2f0_dx2_ref = 0  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # x is ignored
@@ -139,7 +140,7 @@ class TestBuilder(unittest.TestCase):
 
     def test_d2f0_dt2(self):
         """Test the second derivative of f0 wrt t."""
-        d2f0_dt2_ref = 0
+        d2f0_dt2_ref = 0  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # x is ignored
@@ -147,7 +148,7 @@ class TestBuilder(unittest.TestCase):
 
     def test_d2f1_dx2(self):
         """Test the second derivative of f1 wrt x."""
-        d2f1_dx2_ref = 0
+        d2f1_dx2_ref = 0  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # x is ignored
@@ -155,7 +156,7 @@ class TestBuilder(unittest.TestCase):
 
     def test_d2f1_dt2(self):
         """Test the second derivative of f1 wrt t."""
-        d2f1_dt2_ref = 0
+        d2f1_dt2_ref = 0  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # x is ignored
@@ -163,7 +164,7 @@ class TestBuilder(unittest.TestCase):
 
     def test_d2Y0_dx2(self):
         """Test the second derivative of Y0 wrt x."""
-        d2Y0_dx2_ref = 0
+        d2Y0_dx2_ref = 0  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # t is ignored
@@ -171,7 +172,7 @@ class TestBuilder(unittest.TestCase):
 
     def test_d2Y0_dt2(self):
         """Test the second derivative of Y0 wrt t."""
-        d2Y0_dt2_ref = 0
+        d2Y0_dt2_ref = 0  # For all inputs.
         for x in xx:
             for t in tt:
                 xt = (x, t)  # t is ignored
@@ -179,12 +180,12 @@ class TestBuilder(unittest.TestCase):
 
     def test_del2bc(self):
         """Test the boundary condition Laplacian are continuous at corners."""
-        xt = (0, 0)
-        for k in range(2):
-            self.assertAlmostEqual(del2bc[0][0][k](xt), del2bc[1][0][k](xt))
-        xt = (1, 0)
-        for k in range(2):
-            self.assertAlmostEqual(del2bc[0][1][k](xt), del2bc[1][0][k](xt))
+        self.assertIs(del2bc[0][0][0], d2f0_dx2)
+        self.assertIs(del2bc[0][0][1], d2f0_dt2)
+        self.assertIs(del2bc[0][1][0], d2f1_dx2)
+        self.assertIs(del2bc[0][1][1], d2f1_dt2)
+        self.assertIs(del2bc[1][0][0], d2Y0_dx2)
+        self.assertIs(del2bc[1][0][1], d2Y0_dt2)
 
     def test_dG_dY(self):
         """Test the derivative of G wrt Y."""
@@ -197,9 +198,9 @@ class TestBuilder(unittest.TestCase):
                 xt = (x, t)
                 self.assertAlmostEqual(dG_dY(xt, Y, delY, del2Y), dG_dY_ref)
 
-    def test_dG_dY_dx(self):
+    def test_dG_ddY_dx(self):
         """Test the derivative of G wrt dY/dx."""
-        dG_dY_dx_ref = 0  # For all inputs.
+        dG_ddY_dx_ref = 0  # For all inputs.
         Y = 0.2
         delY = [0.3, 0.4]
         del2Y = [0.5, 0.6]
@@ -207,11 +208,11 @@ class TestBuilder(unittest.TestCase):
             for t in tt:
                 xt = (x, t)
                 self.assertAlmostEqual(dG_dY_dx(xt, Y, delY, del2Y),
-                                       dG_dY_dx_ref)
+                                       dG_ddY_dx_ref)
 
-    def test_dG_dY_dt(self):
+    def test_dG_ddY_dt(self):
         """Test the derivative of G wrt dY/dt."""
-        dG_dY_dt_ref = 1  # For all inputs.
+        dG_ddY_dt_ref = 1  # For all inputs.
         Y = 0.2
         delY = [0.3, 0.4]
         del2Y = [0.5, 0.6]
@@ -219,7 +220,7 @@ class TestBuilder(unittest.TestCase):
             for t in tt:
                 xt = (x, t)
                 self.assertAlmostEqual(dG_dY_dt(xt, Y, delY, del2Y),
-                                       dG_dY_dt_ref)
+                                       dG_ddY_dt_ref)
 
     def test_dG_ddelY(self):
         """Test the derivatives of G wrt gradients."""
