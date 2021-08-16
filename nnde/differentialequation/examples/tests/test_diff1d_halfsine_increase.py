@@ -119,7 +119,7 @@ class TestBuilder(unittest.TestCase):
                 self.assertAlmostEqual(dY0_dt(xt), dY0_dt_ref)
 
     def test_delbc(self):
-        """Test the boundary condition gradients are continuous at corners."""
+        """Test the boundary condition gradients as an array."""
         self.assertIs(delbc[0][0][0], df0_dx)
         self.assertIs(delbc[0][0][1], df0_dt)
         self.assertIs(delbc[0][1][0], df1_dx)

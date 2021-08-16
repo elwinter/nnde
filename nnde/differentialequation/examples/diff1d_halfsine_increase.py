@@ -269,7 +269,7 @@ def d2f0_dx2(xt):
     Returns
     -------
     result : float
-        Value of the 2ns derivative of BC wrt x at (x, t) = (0, t).
+        Value of the 2nd derivative of BC wrt x at (x, t) = (0, t).
     """
     return 0
 
