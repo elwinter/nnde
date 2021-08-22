@@ -1,6 +1,6 @@
-"""The 1-D diffusion equation.
+"""The 2-D diffusion equation.
 
-This module implements a 12-D diffusion PDE.
+This module implements a 2-D diffusion PDE.
 
 Note that an upper-case 'Y' is used to represent the Greek psi, which
 represents the problem solution Y(x, y, t). Y(x, y, t) is normalized to the

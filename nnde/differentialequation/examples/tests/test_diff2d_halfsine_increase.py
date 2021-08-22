@@ -549,7 +549,7 @@ class TestBuilder(unittest.TestCase):
                     delA_ref[0] = (a*t + pi*(1 - t)*cos(pi*x))*sin(pi*y)
                     delA_ref[1] = pi*cos(pi*y)*(a*t*x + (1 - t)*sin(pi*x))
                     delA_ref[2] = (a*x - sin(pi*x))*sin(pi*y)
-                    for i in range(2):
+                    for i in range(3):
                         self.assertAlmostEqual(delA(xyt)[i], delA_ref[i])
 
     def test_del2A(self):
@@ -562,7 +562,7 @@ class TestBuilder(unittest.TestCase):
                     del2A_ref[0] = pi**2*(t - 1)*sin(pi*x)*sin(pi*y)
                     del2A_ref[1] = pi**2*(-a*t*x + (t - 1)*sin(pi*x))*sin(pi*y)
                     del2A_ref[2] = 0
-                    for i in range(2):
+                    for i in range(3):
                         self.assertAlmostEqual(del2A(xyt)[i], del2A_ref[i])
 
 
