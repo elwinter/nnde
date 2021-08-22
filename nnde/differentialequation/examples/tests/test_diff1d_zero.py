@@ -1,4 +1,4 @@
-"""Tests for the diff1d_one module."""
+"""Tests for the diff1d_zero module."""
 
 
 import unittest
