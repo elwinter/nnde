@@ -12,7 +12,7 @@ Demos are available in the repository [`nnde_demos`](https://github.com/elwinter
 # Install and Use
 
 ```bash
-pip install nnde --update
+pip install nnde
 git clone https://github.com/elwinter/nnde_demos
 pip install matplotlib # optional
 cd nnde_demos; python lagaris01_demo.py
