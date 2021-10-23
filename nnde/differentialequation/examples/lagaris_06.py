@@ -1,5 +1,5 @@
 """
-This module implements problem 5 in Lagaris et al (1998) (2nd order 2-D
+This module implements problem 6 in Lagaris et al (1998) (2nd order 2-D
 PDE BVP).
 
 Note that an upper-case 'Y' is used to represent the Greek psi from
@@ -10,19 +10,19 @@ The equation is defined on the domain [[0, 1], [0, 1]].
 The analytical form of the equation is:
 
     G(x, y, Y, dY/dx, dY/dy, d2Y/dx2, d2Y/dy2) =
-    d2Y_dx2 + d2Y_dy2 - exp(-x)*(x - 2 + y**3 + 6*y) = 0
+    d2Y_dx2 + d2Y_dy2 - (2 - pi***2*y**2)*sin(pi*x) = 0
 
-with initial condition:
+with boundary conditions:
 
-    Y(0, y) = y**3
-    Y(1, y) = (1 + y**3)*exp(-1)
-    Y(x, 0) = x*exp(-x)
-    Y(x, 1) = exp(-x)*(x + 1)
+    Y(0, y) = 0
+    Y(1, y) = 0
+    Y(x, 0) = 0
+    dY/dy(x, 1) = 2*sin(pi*x)
 
 This equation has the analytical solution for the supplied initial
 conditions:
 
-Ya(x, y) = exp(-x)*(x + y**3)
+Ya(x, y) = y**2*sin(pi*x)
 
 Reference:
 
@@ -33,7 +33,7 @@ Equations", *IEEE Transactions on Neural Networks* **9**(5), pp. 987-999,
 """
 
 
-from math import exp
+from math import cos, pi, sin
 
 
 def G(xy, Y, delY, del2Y):
@@ -60,7 +60,7 @@ def G(xy, Y, delY, del2Y):
     """
     (x, y) = xy
     (d2Y_dx2, d2Y_dy2) = del2Y
-    _G = d2Y_dx2 + d2Y_dy2 - exp(-x)*(x - 2 + y**3 + 6*y)
+    _G = d2Y_dx2 + d2Y_dy2 - (2 - pi**2*y**2)*sin(pi*x)
     return _G
 
 
@@ -79,8 +79,7 @@ def f0(xy):
     result : float
         Value of the solution at (x, y) = (0, y).
     """
-    (x, y) = xy
-    return y**3
+    return 0
 
 
 def f1(xy):
@@ -98,8 +97,7 @@ def f1(xy):
     result : float
         Value of the solution at (x, y) = (1, y).
     """
-    (x, y) = xy
-    return (1 + y**3)*exp(-1)
+    return 0
 
 
 def g0(xy):
@@ -117,8 +115,7 @@ def g0(xy):
     result : float
         Value of the solution at (x, y) = (x, 0).
     """
-    (x, y) = xy
-    return x*exp(-x)
+    return 0
 
 
 def g1(xy):
@@ -137,11 +134,11 @@ def g1(xy):
         Value of the solution at (x, y) = (x, 1).
     """
     (x, y) = xy
-    return exp(-x)*(x + 1)
-
+    return 2*sin(pi*x)
+    # NOTE - THIS IS A DERIVATIVE!
 
 # Gather the boundary condition functions in a single array.
-bc = [[f0, f1], [g0, g1]]
+# bc = [[f0, f1], [g0, g1]]
 
 
 # def df0_dx(xt):
@@ -574,7 +571,7 @@ def Ya(xy):
         Value of the analytical solution.
     """
     (x, y) = xy
-    _Ya = exp(-x)*(x + y**3)
+    _Ya = y**2*sin(pi*x)
     return _Ya
 
 
@@ -594,7 +591,7 @@ def dYa_dx(xy):
         Value of the 1st x-derivative of the analytical solution of G.
     """
     (x, y) = xy
-    _dYa_dx = exp(-x)*(1 - x - y**3)
+    _dYa_dx = pi*y**2*cos(pi*x)
     return _dYa_dx
 
 
@@ -614,12 +611,12 @@ def dYa_dy(xy):
         Value of the 1st y-derivative of the analytical solution of G.
     """
     (x, y) = xy
-    _dYa_dy = 3*exp(-x)*y**2
+    _dYa_dy = 2*y*sin(pi*x)
     return _dYa_dy
 
 
 # Gather the analytical gradient functions into a single array.
-delYa = [dYa_dx, dYa_dy]
+# delYa = [dYa_dx, dYa_dy]
 
 
 def d2Ya_dx2(xy):
@@ -638,7 +635,7 @@ def d2Ya_dx2(xy):
         Value of the 2nd x-derivative of the analytical solution of G.
     """
     (x, y) = xy
-    _d2Ya_dx2 = exp(-x)*(-2 + x + y**3)
+    _d2Ya_dx2 = -pi**2*y**2*sin(pi*x)
     return _d2Ya_dx2
 
 
@@ -658,9 +655,9 @@ def d2Ya_dy2(xy):
         Value of the 2nd y-derivative of the analytical solution of G.
     """
     (x, y) = xy
-    _d2Ya_dy2 = 6*exp(-x)*y
+    _d2Ya_dy2 = 2*sin(pi*x)
     return _d2Ya_dy2
 
 
 # Gather the Laplacian component functions into a single array.
-del2Ya = [d2Ya_dx2, d2Ya_dy2]
+# del2Ya = [d2Ya_dx2, d2Ya_dy2]

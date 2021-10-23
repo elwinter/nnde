@@ -1,39 +1,49 @@
 """
-This module implements problem 5 in Lagaris et al (1998) (2nd order 2-D
-PDE BVP).
+This module implements a simple 2-D 2nd-order PDE BVP.
 
 Note that an upper-case 'Y' is used to represent the Greek psi from
 the original equation.
 
-The equation is defined on the domain [[0, 1], [0, 1]].
+The equation is defined on the domain [[0, 1], [0, 1]]:
+
+    d2Y_dx2 + d2Y_dy2 = 2*x
 
 The analytical form of the equation is:
 
-    G(x, y, Y, dY/dx, dY/dy, d2Y/dx2, d2Y/dy2) =
-    d2Y_dx2 + d2Y_dy2 - exp(-x)*(x - 2 + y**3 + 6*y) = 0
+    G(x, y, Y, dY/dx, dY/dy) = 0 =
+    d2Y_dx2 + d2Y_dy2 - 2*x
 
-with initial condition:
+with boundary conditions:
 
-    Y(0, y) = y**3
-    Y(1, y) = (1 + y**3)*exp(-1)
-    Y(x, 0) = x*exp(-x)
-    Y(x, 1) = exp(-x)*(x + 1)
+    Y(0, y) = f0(x, y) = 0
+    Y(1, y) = f1(x, y) = y**2
+    Y(x, 0) = g0(x, y) = 0
+    Y(x, 0) = g1(x, y) = x
 
-This equation has the analytical solution for the supplied initial
+This equation has the analytical solution for the supplied boundary
 conditions:
 
-Ya(x, y) = exp(-x)*(x + y**3)
+Ya(x, y) = x*y**2
+dYa_dx(x, y) = y**2
+dYa_dy(x, y) = 2*x*y
+d2Ya_dx2(x, y) = 0
+d2Ya_dy2(x, y) = 2*x
 
-Reference:
+The boundary condition function is:
 
-Isaac Elias Lagaris, Aristidis Likas, and Dimitrios I. Fotiadis,
-"Artificial Neural Networks for Solving Ordinary and Partial Differential
-Equations", *IEEE Transactions on Neural Networks* **9**(5), pp. 987-999,
-1998
+A(x, y) = (1 - x)*f0(x, y) + x * f1(x, y)
+          + (1 - y)*(g0(x, y) - ((1 - x)*g0(0, 0) + x*g0(1, 0)))
+          + y*(g1(x, y) - ((1 - x)*g1(0, y) + x*g1(1, y)))
+        = 0 + x * y**2
+          + 0
+          + y*(x - ((1 - x)*0 + x*1))
+        = x + y**2
+
+The trial solution is:
+
+Yt(x, y) = A(x, y) + x*(1 - x)*y*(1 - y)*N(x, y, p)
+         = x + y**2 + x*(1 - x)*y*(1 - y)*N(x, y, p)
 """
-
-
-from math import exp
 
 
 def G(xy, Y, delY, del2Y):
@@ -48,7 +58,7 @@ def G(xy, Y, delY, del2Y):
         Values for x and y, in that order.
     Y : float
         Current solution value.
-    delY : array-like of 2 float, not used
+    delY : array-like of 2 float
         Values for dY/dx and dY/dy, in that order.
     del2Y : array-like of 2 float
         Values for d2Y/dx2 and d2Y/dy2, in that order.
@@ -59,8 +69,9 @@ def G(xy, Y, delY, del2Y):
         Value of the differential equation.
     """
     (x, y) = xy
+    (dY_dx, dY_dy) = delY
     (d2Y_dx2, d2Y_dy2) = del2Y
-    _G = d2Y_dx2 + d2Y_dy2 - exp(-x)*(x - 2 + y**3 + 6*y)
+    _G = d2Y_dx2 + d2Y_dy2 - 2*x
     return _G
 
 
@@ -80,7 +91,7 @@ def f0(xy):
         Value of the solution at (x, y) = (0, y).
     """
     (x, y) = xy
-    return y**3
+    return 0
 
 
 def f1(xy):
@@ -99,7 +110,7 @@ def f1(xy):
         Value of the solution at (x, y) = (1, y).
     """
     (x, y) = xy
-    return (1 + y**3)*exp(-1)
+    return y**2
 
 
 def g0(xy):
@@ -118,7 +129,7 @@ def g0(xy):
         Value of the solution at (x, y) = (x, 0).
     """
     (x, y) = xy
-    return x*exp(-x)
+    return 0
 
 
 def g1(xy):
@@ -137,7 +148,7 @@ def g1(xy):
         Value of the solution at (x, y) = (x, 1).
     """
     (x, y) = xy
-    return exp(-x)*(x + 1)
+    return x
 
 
 # Gather the boundary condition functions in a single array.
@@ -574,7 +585,7 @@ def Ya(xy):
         Value of the analytical solution.
     """
     (x, y) = xy
-    _Ya = exp(-x)*(x + y**3)
+    _Ya = x*y**2
     return _Ya
 
 
@@ -594,7 +605,7 @@ def dYa_dx(xy):
         Value of the 1st x-derivative of the analytical solution of G.
     """
     (x, y) = xy
-    _dYa_dx = exp(-x)*(1 - x - y**3)
+    _dYa_dx = y**2
     return _dYa_dx
 
 
@@ -614,7 +625,7 @@ def dYa_dy(xy):
         Value of the 1st y-derivative of the analytical solution of G.
     """
     (x, y) = xy
-    _dYa_dy = 3*exp(-x)*y**2
+    _dYa_dy = 2*x*y
     return _dYa_dy
 
 
@@ -638,7 +649,7 @@ def d2Ya_dx2(xy):
         Value of the 2nd x-derivative of the analytical solution of G.
     """
     (x, y) = xy
-    _d2Ya_dx2 = exp(-x)*(-2 + x + y**3)
+    _d2Ya_dx2 = 0
     return _d2Ya_dx2
 
 
@@ -658,7 +669,7 @@ def d2Ya_dy2(xy):
         Value of the 2nd y-derivative of the analytical solution of G.
     """
     (x, y) = xy
-    _d2Ya_dy2 = 6*exp(-x)*y
+    _d2Ya_dy2 = 2*x
     return _d2Ya_dy2
 
 
