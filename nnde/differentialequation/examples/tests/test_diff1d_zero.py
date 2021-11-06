@@ -5,7 +5,7 @@ import unittest
 
 import numpy as np
 
-from nnde.differentialequation.examples.diff1d_half import (
+from nnde.differentialequation.examples.diff1d_zero import (
     C, D,
     G,
     f0, f1, Y0, bc,
