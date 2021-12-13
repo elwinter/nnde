@@ -55,11 +55,6 @@ class PDE1IVP(PDE1):
         if diffeqmod:
             self.name = diffeqmod
             pdemod = import_module(diffeqmod)
-            assert pdemod.G
-            assert pdemod.bc is not None
-            assert pdemod.delbc is not None
-            assert pdemod.dG_dY
-            assert pdemod.dG_ddelY
             self.G = pdemod.G
             self.bc = pdemod.bc
             self.delbc = pdemod.delbc

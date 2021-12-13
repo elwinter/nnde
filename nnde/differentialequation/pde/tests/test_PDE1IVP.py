@@ -7,7 +7,7 @@ from nnde.exceptions.nndeexception import NNDEException
 class TestBuilder(unittest.TestCase):
 
     def test___init__(self):
-        PDE1IVP()
+        PDE1IVP("nnde.differentialequation.examples.simple_pde1")
         # ADD CODE TO LOAD FROM MODULE.
 
 
