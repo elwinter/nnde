@@ -225,10 +225,19 @@ class NNODE1IVP(SLFFNN):
         u = np.random.uniform(umin, umax, H)
         v = np.random.uniform(vmin, vmax, H)
 
+        # <HACK>
+        w[...] = [-0.03283963, -0.04337479, -0.0333208,   0.08916026, 0.01477627,
+                   0.03570686,  0.01561058, -0.02717073, -0.03789904, 0.03355774]
+        u[...] =  [-0.01133743,  0.08387997, -0.06781313, -0.07689423, 0.05155497,
+                   -0.08215367, -0.0969972,   0.07260706,  0.03820939, 0.09358523]
+        v[...] = [  0.0123421, 0.08048297, -0.04861869, 0.03526692, 0.02936934,
+                   -0.08908385, 0.01508242, 0.08253389, 0.00133063, 0.0946394]
+        # </HACK>
+
         # Initial parameter deltas are 0.
-        dE_dw = np.zeros(H)
-        dE_du = np.zeros(H)
-        dE_dv = np.zeros(H)
+        dL_dw = np.zeros(H)
+        dL_du = np.zeros(H)
+        dL_dv = np.zeros(H)
 
         # Train the network.
         for epoch in range(maxepochs):
@@ -236,9 +245,9 @@ class NNODE1IVP(SLFFNN):
                 print('Starting epoch %d.' % epoch)
 
             # Compute the new values of the network parameters.
-            w -= eta*dE_dw
-            u -= eta*dE_du
-            v -= eta*dE_dv
+            w -= eta*dL_dw
+            u -= eta*dL_du
+            v -= eta*dL_dv
 
             # Log the current parameter values.
             self.phist = (
@@ -292,22 +301,21 @@ class NNODE1IVP(SLFFNN):
             dG_du = dG_dYt_b*dYt_du + dG_dYtdx_b*d2Yt_dudx
             dG_dv = dG_dYt_b*dYt_dv + dG_dYtdx_b*d2Yt_dvdx
 
-            # Compute the error function for this epoch.
-            E = np.sum(G**2)
-            self.losses.append(E)
+            # Compute the loss function for this epoch.
+            L = np.sqrt(np.sum(G**2)/len(G))
+            self.losses.append(L)
 
             # Compute the partial derivatives of the error with respect to the
             # network parameters.
             # Temporary boradcast version of G.
             G_b = np.broadcast_to(G, (H, n)).T
-            dE_dw = 2*np.sum(G_b*dG_dw, axis=0)
-            dE_du = 2*np.sum(G_b*dG_du, axis=0)
-            dE_dv = 2*np.sum(G_b*dG_dv, axis=0)
+            dL_dw = np.sum(G_b*dG_dw, axis=0)/(n*L)
+            dL_du = np.sum(G_b*dG_du, axis=0)/(n*L)
+            dL_dv = np.sum(G_b*dG_dv, axis=0)/(n*L)
 
             # Compute RMS error for this epoch.
-            rmse = sqrt(E/n)
             if debug:
-                print(epoch, rmse)
+                print(epoch, L)
 
         # Save the optimized parameters.
         self.w = w
@@ -379,10 +387,10 @@ class NNODE1IVP(SLFFNN):
         Yt = self.Yt_v(x, N)
         dYt_dx = self.dYt_dx_v(x, N, dN_dx)
         G = self.G_v(x, Yt, dYt_dx)
-        E = np.sum(G**2)
-        self.losses.append(E)
+        L = np.sqrt(np.sum(G**2)/len(G))
+        self.losses.append(L)
 
-        return E
+        return L
 
     def _compute_error_gradient(self, p, x):
         """Compute the gradient of the error function wrt network
