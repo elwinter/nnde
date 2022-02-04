@@ -1,5 +1,5 @@
 ---
-title: 'nnde: A Python package for solving differential equations using neural networks'
+title: '`nnde`: A Python package for solving differential equations using neural networks'
 tags:
   - Python
   - neural networks
@@ -14,9 +14,13 @@ authors:
 affiliations:
   - name: Department of Physics and Astronomy, George Mason University, Fairfax, Virginia, USA
     index: 1
-date: 14 August 2021
+date: 8 January 2022
 bibliography: paper.bib
 ---
+
+Eric Winter, Department of Physics and Astronomy, George Mason University, Fairfax, Virginia, USA
+
+R.S. Weigel, Department of Physics and Astronomy, George Mason University, Fairfax, Virginia, USA
 
 # Summary
 
