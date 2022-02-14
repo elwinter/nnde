@@ -14,13 +14,9 @@ authors:
 affiliations:
   - name: Department of Physics and Astronomy, George Mason University, Fairfax, Virginia, USA
     index: 1
-date: 8 January 2022
+date: 14 February 2022
 bibliography: paper.bib
 ---
-
-Eric Winter, Department of Physics and Astronomy, George Mason University, Fairfax, Virginia, USA
-
-R.S. Weigel, Department of Physics and Astronomy, George Mason University, Fairfax, Virginia, USA
 
 # Summary
 
@@ -63,11 +59,3 @@ A collection of example python scripts using `nnde`  is available at https://git
 A collection of example Jupyter notebooks using `nnde` is available at https://github.com/elwinter/nnde_notebooks.
 
 # References
-
-Chakraverty, S., & Mall, S. (2017). Artificial neural networks for engineers and scientists: Solving ordinary differential equations. CRC Press. ISBN: 1498781381
-
-Lagaris, I. E., Likas, A., & Fotiadis, D. I. (1998). Artificial neural networks for solving ordinary and partial differential equations. IEEE Transactions on Neural Networks, 9(5), 987–1000. https://doi.org/10.1109/72.712178
-
-Raissi, M., Perdikaris, P., & Karniadakis, G. E. (2019). Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations. Journal of Computational Physics, 378, 686–707. https://doi.org/10.1016/j.jcp.2018.10.045
-
-Yadav, N., Yadav, A., & Kumar, M. (2015). An introduction to neural network methods for differential equations. Springer Netherlands. https://doi.org/10.1007/978-94-017-9816-7
